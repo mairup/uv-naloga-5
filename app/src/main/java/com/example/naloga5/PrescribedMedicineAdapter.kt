@@ -23,21 +23,11 @@ class PrescribedMedicineAdapter(
         fun bind(item: PrescribedMedicineItem) {
             textName.text = item.medicine.name
 
-            val subtitle = if (item.dose.isNotBlank()) {
-                if (item.medicine.activeIngredient.isBlank()) item.dose
-                else "${item.medicine.activeIngredient} • ${item.dose}"
-            } else {
-                if (item.medicine.activeIngredient.isBlank()) "Neznana učinkovina"
-                else item.medicine.activeIngredient
-            }
-            textActiveIngredient.text = subtitle
-
-            if (item.notes.isNotBlank()) {
-                textNotes.text = "Opomba: ${item.notes}"
-                textNotes.visibility = View.VISIBLE
-            } else {
-                textNotes.visibility = View.GONE
-            }
+            val parts = mutableListOf<String>()
+            if (item.medicine.activeIngredient.isNotBlank()) parts.add(item.medicine.activeIngredient)
+            if (item.dose.isNotBlank()) parts.add(item.dose)
+            if (item.notes.isNotBlank()) parts.add(item.notes)
+            textActiveIngredient.text = if (parts.isNotEmpty()) parts.joinToString(" • ") else ""
 
             btnDelete.visibility = if (showRemoveAction) View.VISIBLE else View.GONE
             btnDelete.setOnClickListener { onRemoveClick?.invoke(item) }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Gender Toggle Colors (Dark Mode Override) -->
-    <color name="gender_checked_bg">#8c3620</color> <!-- Rich/dark terracotta -->
+    <color name="gender_checked_bg">#d46448</color> <!-- Lighter terracotta peach (dark) -->
     <color name="gender_unchecked_bg">#00000000</color>
     <color name="gender_checked_text">#ffffff</color>
     <color name="gender_unchecked_text">#e1e8e1</color>

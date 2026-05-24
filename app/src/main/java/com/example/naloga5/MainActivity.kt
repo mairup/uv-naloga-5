@@ -45,11 +45,11 @@ class MainActivity : AppCompatActivity() {
                 if (index != -1) {
                     persons[index] = returnedPerson
                     personAdapter.notifyItemChanged(index)
-                    Snackbar.make(findViewById(android.R.id.content), "Oseba uspešno posodobljena", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Oseba uspešno posodobljena")
                 } else {
                     persons.add(returnedPerson)
                     personAdapter.notifyItemInserted(persons.size - 1)
-                    Snackbar.make(findViewById(android.R.id.content), "Oseba uspešno dodana", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Oseba uspešno dodana")
                 }
             }
         }
@@ -63,11 +63,11 @@ class MainActivity : AppCompatActivity() {
                 if (index != -1) {
                     medicines[index] = returnedMedicine
                     filterMedicines()
-                    Snackbar.make(findViewById(android.R.id.content), "Zdravilo uspešno posodobljeno", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Zdravilo uspešno posodobljeno")
                 } else {
                     medicines.add(returnedMedicine)
                     filterMedicines()
-                    Snackbar.make(findViewById(android.R.id.content), "Zdravilo uspešno dodano", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Zdravilo uspešno dodano")
                 }
             }
         }
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 if (index != -1) {
                     persons[index] = returnedPerson
                     personAdapter.notifyItemChanged(index)
-                    Snackbar.make(findViewById(android.R.id.content), "Predpisana zdravila posodobljena", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Predpisana zdravila posodobljena")
                 }
             }
         }
@@ -257,7 +257,8 @@ class MainActivity : AppCompatActivity() {
         if (position != -1) {
             persons.removeAt(position)
             personAdapter.notifyItemRemoved(position)
-            Snackbar.make(findViewById(android.R.id.content), "Oseba ${person.firstName} je bila izbrisana", Snackbar.LENGTH_SHORT).show()
+            personAdapter.notifyItemRangeChanged(position, persons.size - position)
+            showSnackbar("Oseba ${person.firstName} je bila izbrisana")
         }
     }
 
@@ -279,42 +280,144 @@ class MainActivity : AppCompatActivity() {
         if (position != -1) {
             medicines.removeAt(position)
             filterMedicines()
-            Snackbar.make(findViewById(android.R.id.content), "Izbrisano zdravilo: ${medicine.name}", Snackbar.LENGTH_SHORT).show()
+
+            // Remove this medicine from all persons' prescriptions
+            for (i in persons.indices) {
+                val person = persons[i]
+                val updatedRx = person.prescribedMedicines.filter { it.medicineId != medicine.id }
+                if (updatedRx.size != person.prescribedMedicines.size) {
+                    persons[i] = person.copy(prescribedMedicines = updatedRx)
+                    personAdapter.notifyItemChanged(i)
+                }
+            }
+
+            showSnackbar("Izbrisano zdravilo: ${medicine.name}")
         }
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+            .setAnchorView(R.id.bottomNavBar)
+            .show()
     }
 
     private fun setupDummyData() {
         // Create medicines first so we can reference their IDs
-        val kventiax = Medicine(UUID.randomUUID().toString(), "Kventiax", "kvetiapin", 0.0, 0.0, 25.0, 1.0, "Antipsihotik / v malih dozah za spanje")
-        val asentra = Medicine(UUID.randomUUID().toString(), "Asentra", "sertralin", 0.0, 0.0, 50.0, 1.0, "Antidepresiv (SSRI)")
-        val helex = Medicine(UUID.randomUUID().toString(), "Helex", "alprazolam", 0.0, 0.0, 0.25, 1.0, "Za lajšanje hudih tesnobnih stanj (anksiolitik)")
-        val cipralex = Medicine(UUID.randomUUID().toString(), "Cipralex", "escitalopram", 0.0, 0.0, 10.0, 1.0, "Antidepresiv (SSRI)")
-        val ritalin = Medicine(UUID.randomUUID().toString(), "Ritalin", "metilfenidat", 0.0, 0.0, 10.0, 1.0, "Za zdravljenje ADHD")
-        val strattera = Medicine(UUID.randomUUID().toString(), "Strattera", "atomoksetin", 0.0, 0.0, 40.0, 1.0, "Ne-stimulativno zdravilo za ADHD")
-        val zyprexa = Medicine(UUID.randomUUID().toString(), "Zyprexa", "olanzapin", 0.0, 0.0, 5.0, 1.0, "Antipsihotik")
+        val kventiax = Medicine(UUID.randomUUID().toString(), "Kventiax", "kvetiapin", 0.0, 0.0, 0.0, 0.0, "Antipsihotik / v malih dozah za spanje")
+        val asentra = Medicine(UUID.randomUUID().toString(), "Asentra", "sertralin", 0.0, 0.0, 0.0, 0.0, "Antidepresiv (SSRI)")
+        val helex = Medicine(UUID.randomUUID().toString(), "Helex", "alprazolam", 0.0, 0.0, 0.0, 0.0, "Za lajšanje hudih tesnobnih stanj (anksiolitik)")
+        val cipralex = Medicine(UUID.randomUUID().toString(), "Cipralex", "escitalopram", 0.0, 0.0, 0.0, 0.0, "Antidepresiv (SSRI)")
+        val ritalin = Medicine(UUID.randomUUID().toString(), "Ritalin", "metilfenidat", 0.0, 0.0, 0.0, 0.0, "Za zdravljenje ADHD")
+        val strattera = Medicine(UUID.randomUUID().toString(), "Strattera", "atomoksetin", 0.0, 0.0, 0.0, 0.0, "Ne-stimulativno zdravilo za ADHD")
+        val zyprexa = Medicine(UUID.randomUUID().toString(), "Zyprexa", "olanzapin", 0.0, 0.0, 0.0, 0.0, "Antipsihotik")
         val calpol = Medicine(UUID.randomUUID().toString(), "Calpol", "paracetamol", 10.0, 15.0, 120.0, 5.0, "Sirup za lajšanje bolečin in zniževanje vročine")
         val brufen = Medicine(UUID.randomUUID().toString(), "Brufen sirup", "ibuprofen", 20.0, 30.0, 100.0, 5.0, "Sirup proti bolečinam in vnetjem")
         val hiconcil = Medicine(UUID.randomUUID().toString(), "Hiconcil", "amoksicilin", 20.0, 40.0, 250.0, 5.0, "Antibiotik (penicilin) v sirupu")
         val zinnat = Medicine(UUID.randomUUID().toString(), "Zinnat", "cefuroksim", 10.0, 15.0, 125.0, 5.0, "Antibiotik v sirupu")
         val claritine = Medicine(UUID.randomUUID().toString(), "Claritine sirup", "loratadin", 0.1, 0.2, 5.0, 5.0, "Protialergijski sirup")
-        val aquipta = Medicine(UUID.randomUUID().toString(), "Aquipta", "atogepant", 0.0, 0.0, 60.0, 1.0, "Za preventivo migrene")
-        val controloc = Medicine(UUID.randomUUID().toString(), "Controloc", "pantoprazol", 0.0, 0.0, 40.0, 1.0, "Zaviranje želodčne kisline (zgaga in refluks)")
-        val atoris = Medicine(UUID.randomUUID().toString(), "Atoris", "atorvastatin", 0.0, 0.0, 20.0, 1.0, "Za zniževanje povišanega holesterola")
-        val euthyrox = Medicine(UUID.randomUUID().toString(), "Euthyrox", "levotiroksin natrij", 0.0, 0.0, 0.1, 1.0, "Hormonsko zdravljenje zmanjšanega delovanja ščitnice")
+        val aquipta = Medicine(UUID.randomUUID().toString(), "Aquipta", "atogepant", 0.0, 0.0, 0.0, 0.0, "Za preventivo migrene")
+        val controloc = Medicine(UUID.randomUUID().toString(), "Controloc", "pantoprazol", 0.0, 0.0, 0.0, 0.0, "Zaviranje želodčne kisline (zgaga in refluks)")
+        val atoris = Medicine(UUID.randomUUID().toString(), "Atoris", "atorvastatin", 0.0, 0.0, 0.0, 0.0, "Za zniževanje povišanega holesterola")
+        val euthyrox = Medicine(UUID.randomUUID().toString(), "Euthyrox", "levotiroksin natrij", 0.0, 0.0, 0.0, 0.0, "Hormonsko zdravljenje zmanjšanega delovanja ščitnice")
+        val wellbutrin = Medicine(UUID.randomUUID().toString(), "Wellbutrin", "bupropion", 0.0, 0.0, 0.0, 0.0, "Antidepresiv (NDRI)")
+        val remeron = Medicine(UUID.randomUUID().toString(), "Mirzaten", "mirtazapin", 0.0, 0.0, 0.0, 0.0, "Antidepresiv (NaSSA)")
 
-        medicines.addAll(listOf(kventiax, asentra, helex, cipralex, ritalin, strattera, zyprexa, calpol, brufen, hiconcil, zinnat, claritine, aquipta, controloc, atoris, euthyrox))
+        // 5 new psych meds
+        val lekotam = Medicine(UUID.randomUUID().toString(), "Lekotam", "bromazepam", 0.0, 0.0, 0.0, 0.0, "Anksiolitik (benzodiazepin)")
+        val sanval = Medicine(UUID.randomUUID().toString(), "Sanval", "zolpidem", 0.0, 0.0, 0.0, 0.0, "Sedativ in hipnotik za kratkotrajno zdravljenje nespečnosti")
+        val trittico = Medicine(UUID.randomUUID().toString(), "Trittico", "trazodon", 0.0, 0.0, 0.0, 0.0, "Antidepresiv s sedativnim učinkom")
+        val cymbalta = Medicine(UUID.randomUUID().toString(), "Cymbalta", "duloksetin", 0.0, 0.0, 0.0, 0.0, "Antidepresiv in anksiolitik (SNRI)")
+        val eglonyl = Medicine(UUID.randomUUID().toString(), "Eglonyl", "sulpirid", 0.0, 0.0, 0.0, 0.0, "Antipsihotik z antidepresivnim in anksiolitičnim delovanjem")
+
+        // 5 new relative dose meds (mg/kg)
+        val daleron = Medicine(UUID.randomUUID().toString(), "Daleron sirup", "paracetamol", 10.0, 15.0, 120.0, 5.0, "Sirup za otroke proti vročini in bolečinam")
+        val sumamed = Medicine(UUID.randomUUID().toString(), "Sumamed sirup", "azitromicin", 10.0, 10.0, 100.0, 5.0, "Širokospektralni antibiotik za otroke, enkrat dnevno")
+        val flonidan = Medicine(UUID.randomUUID().toString(), "Flonidan sirup", "loratadin", 0.1, 0.2, 5.0, 5.0, "Protialergijski sirup za otroke")
+        val ospen = Medicine(UUID.randomUUID().toString(), "Ospen sirup", "fenoksimetilpenicilin kalij", 25.0, 50.0, 250.0, 5.0, "Penicilinski antibiotik za zdravljenje angine pri otrocih")
+        val keppra = Medicine(UUID.randomUUID().toString(), "Keppra sirup", "levetiracetam", 10.0, 30.0, 100.0, 1.0, "Sirup za zdravljenje epilepsije (protiepileptik)")
+
+        medicines.addAll(listOf(
+            kventiax, asentra, helex, cipralex, ritalin, strattera, zyprexa, calpol, brufen, hiconcil, 
+            zinnat, claritine, aquipta, controloc, atoris, euthyrox, wellbutrin, remeron,
+            lekotam, sanval, trittico, cymbalta, eglonyl,
+            daleron, sumamed, flonidan, ospen, keppra
+        ))
         medicines.sortBy { it.name.lowercase() }
 
         // Create persons with Prescription references by medicine ID and ensure all have doses, and some have notes
-        persons.add(Person(UUID.randomUUID().toString(), "Janez", "Novak", "M", "1990-01-01", 85.0, 180.0, listOf(Prescription(atoris.id, "20 mg", "Vzeti zvečer ob hrani"), Prescription(controloc.id, "40 mg", "30 minut pred zajtrkom"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Luka", "Kovač", "M", "1995-07-20", 78.0, 185.0, listOf(Prescription(hiconcil.id, "31.20 ml"), Prescription(calpol.id, "32.50 ml", "Po potrebi ob povišani temperaturi"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Marija", "Horvat", "Ž", "1985-05-15", 65.0, 170.0, listOf(Prescription(kventiax.id, "25 mg", "Pred spanjem"), Prescription(controloc.id, "40 mg"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Ana", "Zupan", "Ž", "1992-11-03", 58.0, 165.0, listOf(Prescription(aquipta.id, "60 mg"), Prescription(asentra.id, "50 mg", "Zjutraj po jedi"), Prescription(helex.id, "0.25 mg", "Po potrebi ob napadih panike"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Aleks", "Car", "D", "2015-03-25", 30.0, 135.0, listOf(Prescription(calpol.id, "12.50 ml"), Prescription(claritine.id, "6.00 ml"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Robin", "Drago", "D", "2018-09-12", 22.0, 115.0, listOf(Prescription(brufen.id, "11.00 ml", "Po jedi z obilo tekočine"), Prescription(zinnat.id, "8.80 ml"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Peter", "Majcen", "M", "1978-04-10", 92.0, 188.0, listOf(Prescription(cipralex.id, "10 mg"), Prescription(atoris.id, "20 mg"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Klara", "Zver", "Ž", "2003-12-05", 52.0, 160.0, listOf(Prescription(strattera.id, "40 mg"), Prescription(ritalin.id, "10 mg", "Vzeti pred šolo"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Tomaž", "Rupnik", "M", "1965-08-30", 80.0, 174.0, listOf(Prescription(zyprexa.id, "5 mg"), Prescription(controloc.id, "40 mg"), Prescription(euthyrox.id, "100 mcg", "Zjutraj na tešče"))))
-        persons.add(Person(UUID.randomUUID().toString(), "Neja", "Bizjak", "Ž", "1994-02-18", 68.0, 168.0, listOf(Prescription(helex.id, "0.25 mg", "Samo ob izraziti tesnobi"))))
+        persons.add(Person(UUID.randomUUID().toString(), "Janez", "Novak", "M", "1990-01-01", 85.0, 180.0, listOf(
+            Prescription(atoris.id, "20 mg", "Vzeti zvečer ob hrani"), 
+            Prescription(controloc.id, "40 mg", "30 minut pred zajtrkom"),
+            Prescription(sanval.id, "5 mg", "Po potrebi zvečer pred spanjem ob hudi nespečnosti")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Luka", "Kovač", "M", "1995-07-20", 78.0, 185.0, listOf(
+            Prescription(wellbutrin.id, "150 mg", "Zjutraj s kozarcem vode"), 
+            Prescription(lekotam.id, "1.5 mg", "Po potrebi ob napadu hude anksioznosti (največ dvakrat dnevno)")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Marija", "Horvat", "Ž", "1985-05-15", 65.0, 170.0, listOf(
+            Prescription(kventiax.id, "25 mg", "Zvečer, 30 minut pred spanjem"), 
+            Prescription(cipralex.id, "10 mg", "Zjutraj po jedi"),
+            Prescription(controloc.id, "20 mg", "Zjutraj na tešče")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Ana", "Zupan", "Ž", "1992-11-03", 58.0, 165.0, listOf(
+            Prescription(aquipta.id, "60 mg", "Za preventivo migrenskih napadov enkrat dnevno"), 
+            Prescription(asentra.id, "100 mg", "Zjutraj po zajtrku"), 
+            Prescription(helex.id, "0.25 mg", "Po potrebi ob napadih panike")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Aleks", "Car", "D", "2015-03-25", 30.0, 135.0, listOf(
+            Prescription(daleron.id, "12.50 ml", "Po potrebi na 6 ur ob povišani temperaturi"), 
+            Prescription(sumamed.id, "7.50 ml", "Enkrat dnevno 3 dni za pljučno okužbo")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Robin", "Drago", "D", "2018-09-12", 22.0, 115.0, listOf(
+            Prescription(brufen.id, "5.50 ml", "Po potrebi ob bolečinah"), 
+            Prescription(zinnat.id, "4.40 ml", "Na 12 ur za vnetje ušesa, izprazniti celo stekleničko"),
+            Prescription(flonidan.id, "4.40 ml", "Enkrat dnevno ob pojavu sezonskih alergij")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Peter", "Majcen", "M", "1978-04-10", 92.0, 188.0, listOf(
+            Prescription(cipralex.id, "20 mg", "Zjutraj ob isti uri"), 
+            Prescription(trittico.id, "75 mg", "Zvečer pred spanjem za izboljšanje spanja"),
+            Prescription(atoris.id, "20 mg", "Zvečer")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Klara", "Zver", "Ž", "2003-12-05", 52.0, 160.0, listOf(
+            Prescription(strattera.id, "40 mg", "Zjutraj ob hrani za zdravljenje ADHD"), 
+            Prescription(ritalin.id, "10 mg", "Zjutraj pred šolo")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Maja", "Kranjc", "Ž", "1991-04-12", 62.0, 168.0, listOf(
+            Prescription(zyprexa.id, "5 mg", "Zvečer pred spanjem"), 
+            Prescription(euthyrox.id, "75 mcg", "Zjutraj 30 minut pred zajtrkom na prazen želodec"),
+            Prescription(controloc.id, "20 mg", "Zjutraj 30 minut pred zajtrkom na tešče")
+        )))
+        
+        persons.add(Person(UUID.randomUUID().toString(), "Neja", "Bizjak", "Ž", "1994-02-18", 68.0, 168.0, listOf(
+            Prescription(cymbalta.id, "60 mg", "Zjutraj po jedi"),
+            Prescription(helex.id, "0.5 mg", "Samo ob izraziti tesnobi po potrebi")
+        )))
+
+        // 3 new persons
+        val marko = Person(UUID.randomUUID().toString(), "Marko", "Turk", "M", "1980-11-12", 82.0, 179.0, listOf(
+            Prescription(eglonyl.id, "200 mg", "Zjutraj in opoldne pred jedjo"),
+            Prescription(wellbutrin.id, "150 mg", "Zjutraj")
+        ))
+        
+        val tjasa = Person(UUID.randomUUID().toString(), "Tjaša", "Oblak", "Ž", "1998-06-25", 54.0, 164.0, listOf(
+            Prescription(remeron.id, "30 mg", "Zvečer tik pred spanjem"),
+            Prescription(sanval.id, "10 mg", "Po potrebi tik pred spanjem, ko ne more zaspati"),
+            Prescription(ospen.id, "10.80 ml", "Na 8 ur za streptokokno angino (10 dni)")
+        ))
+        
+        val matej = Person(UUID.randomUUID().toString(), "Matej", "Pirc", "M", "2012-02-14", 42.0, 148.0, listOf(
+            Prescription(ritalin.id, "10 mg", "Zjutraj pred odhodom v šolo"),
+            Prescription(keppra.id, "8.40 ml", "Na 12 ur zjutraj in zvečer za preprečevanje epileptičnih napadov")
+        ))
+
+        persons.addAll(listOf(marko, tjasa, matej))
     }
 }

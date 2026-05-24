@@ -34,7 +34,7 @@ class MedicineAdapter(
             textActiveIngredient.text = medicine.activeIngredient
             
             if (medicine.minDoseMgKg == 0.0 && medicine.maxDoseMgKg == 0.0) {
-                textStats.text = "Fiksni odmerek | ${medicine.mgPerUnit} mg na enoto"
+                textStats.text = "Fiksen odmerek"
             } else {
                 textStats.text = "Odmerek: ${medicine.minDoseMgKg}-${medicine.maxDoseMgKg} mg/kg | ${medicine.mgPerUnit} mg / ${medicine.perMl} ml"
             }
@@ -53,8 +53,12 @@ class MedicineAdapter(
             }
 
             itemView.setOnClickListener {
+                val currentPos = adapterPosition
+                if (currentPos == RecyclerView.NO_POSITION) return@setOnClickListener
+
                 val previousExpanded = expandedPosition
-                expandedPosition = if (isExpanded) -1 else position
+                val isCurrentlyExpanded = currentPos == expandedPosition
+                expandedPosition = if (isCurrentlyExpanded) -1 else currentPos
 
                 if (previousExpanded != -1) notifyItemChanged(previousExpanded)
                 if (expandedPosition != -1) notifyItemChanged(expandedPosition)

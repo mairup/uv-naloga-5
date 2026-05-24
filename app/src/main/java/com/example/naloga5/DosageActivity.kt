@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Locale
 import java.util.UUID
 
 class DosageActivity : AppCompatActivity() {
@@ -184,7 +185,7 @@ class DosageActivity : AppCompatActivity() {
             items = assignedItems,
             showRemoveAction = true,
             onRemoveClick = { item -> removeAssignedItem(item) },
-            onItemLongClick = { item -> showCalculator(item) }
+            onItemClick = { item -> showCalculator(item) }
         )
 
         // Build picker items from all medicines
@@ -196,7 +197,7 @@ class DosageActivity : AppCompatActivity() {
             showRemoveAction = false,
             onItemClick = { item ->
                 if (assignedItems.any { it.medicine.id == item.medicine.id }) {
-                    Snackbar.make(findViewById(android.R.id.content), "Zdravilo je že dodano", Snackbar.LENGTH_SHORT).show()
+                    showSnackbar("Zdravilo je že dodano")
                     return@PrescribedMedicineAdapter
                 }
                 assignedItems.add(PrescribedMedicineItem(item.medicine))
@@ -244,21 +245,21 @@ class DosageActivity : AppCompatActivity() {
             val item = currentCalcItem ?: return@setOnClickListener
             val mgKg = editCalcMgKg.text?.toString()?.toDoubleOrNull()
             if (mgKg == null) {
-                Snackbar.make(findViewById(android.R.id.content), "Vnesite veljavno vrednost mg/kg", Snackbar.LENGTH_SHORT).show()
+                showSnackbar("Vnesite veljavno vrednost mg/kg")
                 return@setOnClickListener
             }
             val med = item.medicine
             val weight = selectedPerson.weightKg
             val totalMg = mgKg * weight
 
-            if (med.perMl != 1.0) {
+            if (med.perMl > 0) {
                 // Syrup: convert mg to ml
                 val ml = totalMg * med.perMl / med.mgPerUnit
-                editCalcFinalDose.setText(String.format("%.2f ml", ml))
+                editCalcFinalDose.setText(String.format(Locale.US, "%.2f ml", ml))
             } else {
                 // Pills/tablets: convert mg to units
                 val units = totalMg / med.mgPerUnit
-                editCalcFinalDose.setText(String.format("%.2f enot", units))
+                editCalcFinalDose.setText(String.format(Locale.US, "%.2f enot", units))
             }
 
             // Close keyboard
@@ -356,18 +357,18 @@ class DosageActivity : AppCompatActivity() {
             val maxMg = med.maxDoseMgKg * weight
 
             val rangeText = StringBuilder().apply {
-                append("Priporočeni odmerek: ${String.format("%.2f", med.minDoseMgKg)} – ${String.format("%.2f", med.maxDoseMgKg)} mg/kg\n")
-                append("Skupna aktivna snov: ${String.format("%.2f", minMg)} – ${String.format("%.2f", maxMg)} mg\n")
-                if (med.perMl != 1.0) {
+                append("Priporočen odmerek: ${String.format(Locale.US, "%.2f", med.minDoseMgKg)} – ${String.format(Locale.US, "%.2f", med.maxDoseMgKg)} mg/kg\n")
+                append("Odmerek snovi: ${String.format(Locale.US, "%.2f", minMg)} – ${String.format(Locale.US, "%.2f", maxMg)} mg\n")
+                if (med.perMl > 0) {
                     val minMl = minMg * med.perMl / med.mgPerUnit
                     val maxMl = maxMg * med.perMl / med.mgPerUnit
-                    append("Koncentracija: ${String.format("%.1f", med.mgPerUnit)} mg / ${String.format("%.1f", med.perMl)} ml\n")
-                    append("Izračunan volumen: ${String.format("%.2f", minMl)} – ${String.format("%.2f", maxMl)} ml")
+                    append("Koncentracija: ${String.format(Locale.US, "%.1f", med.mgPerUnit)} mg / ${String.format(Locale.US, "%.1f", med.perMl)} ml\n")
+                    append("Priporočena količina: ${String.format(Locale.US, "%.2f", minMl)} – ${String.format(Locale.US, "%.2f", maxMl)} ml")
                 } else {
                     val minUnits = minMg / med.mgPerUnit
                     val maxUnits = maxMg / med.mgPerUnit
-                    append("Jakost: ${String.format("%.1f", med.mgPerUnit)} mg / enoto\n")
-                    append("Izračunano število enot: ${String.format("%.2f", minUnits)} – ${String.format("%.2f", maxUnits)} enot")
+                    append("Jakost: ${String.format(Locale.US, "%.1f", med.mgPerUnit)} mg / enoto\n")
+                    append("Priporočena količina: ${String.format(Locale.US, "%.2f", minUnits)} – ${String.format(Locale.US, "%.2f", maxUnits)} enot")
                 }
             }.toString()
 
@@ -489,5 +490,11 @@ class DosageActivity : AppCompatActivity() {
         allMedicines.clear()
         allMedicines.addAll(parsedMedicines)
         return true
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+            .setAnchorView(R.id.bottomActionBar)
+            .show()
     }
 }

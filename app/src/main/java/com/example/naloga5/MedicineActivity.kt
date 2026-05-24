@@ -3,8 +3,11 @@ package com.example.naloga5
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
@@ -37,7 +40,13 @@ class MedicineActivity : AppCompatActivity() {
     private lateinit var layoutMgPerUnit: TextInputLayout
     private lateinit var layoutPerMl: TextInputLayout
 
+    private lateinit var toggleDoseType: LinearLayout
+    private lateinit var btnFixedDose: MaterialButton
+    private lateinit var btnRelativeDose: MaterialButton
+    private lateinit var layoutRelativeDose: LinearLayout
+
     private var currentMedicineId: String? = null
+    private var isFixedDoseMode: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +63,18 @@ class MedicineActivity : AppCompatActivity() {
             currentMedicineId = existingMedicine.id
             editName.setText(existingMedicine.name)
             editActiveIngredient.setText(existingMedicine.activeIngredient)
-            editMinDose.setText(existingMedicine.minDoseMgKg.toString())
-            editMaxDose.setText(existingMedicine.maxDoseMgKg.toString())
             editMgPerUnit.setText(existingMedicine.mgPerUnit.toString())
-            editPerMl.setText(existingMedicine.perMl.toString())
+            editPerMl.setText(if (existingMedicine.perMl == 0.0) "" else existingMedicine.perMl.toString())
             editNotes.setText(existingMedicine.notes)
+
+            val isFixed = existingMedicine.minDoseMgKg == 0.0 && existingMedicine.maxDoseMgKg == 0.0
+            selectDoseType(fixed = isFixed)
+            if (!isFixed) {
+                editMinDose.setText(existingMedicine.minDoseMgKg.toString())
+                editMaxDose.setText(existingMedicine.maxDoseMgKg.toString())
+                editMgPerUnit.setText(existingMedicine.mgPerUnit.toString())
+                editPerMl.setText(if (existingMedicine.perMl == 0.0) "" else existingMedicine.perMl.toString())
+            }
         }
 
         buttonSave.setOnClickListener { saveMedicine() }
@@ -112,6 +128,17 @@ class MedicineActivity : AppCompatActivity() {
         layoutMgPerUnit = findViewById(R.id.layoutMgPerUnit)
         layoutPerMl = findViewById(R.id.layoutPerMl)
 
+        toggleDoseType = findViewById(R.id.layoutDoseTypeContainer)
+        btnFixedDose = findViewById(R.id.btnFixedDose)
+        btnRelativeDose = findViewById(R.id.btnRelativeDose)
+        layoutRelativeDose = findViewById(R.id.layoutRelativeDose)
+
+        btnFixedDose.setOnClickListener { selectDoseType(fixed = true) }
+        btnRelativeDose.setOnClickListener { selectDoseType(fixed = false) }
+
+        // Default to fixed dose
+        selectDoseType(fixed = true)
+
         // Clear error states when text changes
         editName.doAfterTextChanged { layoutName.error = null }
         editActiveIngredient.doAfterTextChanged { layoutActiveIngredient.error = null }
@@ -119,6 +146,28 @@ class MedicineActivity : AppCompatActivity() {
         editMaxDose.doAfterTextChanged { layoutMaxDose.error = null }
         editMgPerUnit.doAfterTextChanged { layoutMgPerUnit.error = null }
         editPerMl.doAfterTextChanged { layoutPerMl.error = null }
+    }
+
+    private fun selectDoseType(fixed: Boolean) {
+        isFixedDoseMode = fixed
+
+        btnFixedDose.isSelected = fixed
+        btnRelativeDose.isSelected = !fixed
+
+        layoutRelativeDose.visibility = if (fixed) View.GONE else View.VISIBLE
+        layoutMgPerUnit.visibility = if (fixed) View.GONE else View.VISIBLE
+        layoutPerMl.visibility = if (fixed) View.GONE else View.VISIBLE
+
+        if (fixed) {
+            editMinDose.text.clear()
+            editMaxDose.text.clear()
+            editMgPerUnit.text.clear()
+            editPerMl.text.clear()
+            layoutMinDose.error = null
+            layoutMaxDose.error = null
+            layoutMgPerUnit.error = null
+            layoutPerMl.error = null
+        }
     }
 
     private fun saveMedicine() {
@@ -149,31 +198,38 @@ class MedicineActivity : AppCompatActivity() {
             hasErrors = true
         }
 
-        val minDose = minDoseStr.toDoubleOrNull()
-        if (minDose == null || minDose < 0) {
-            layoutMinDose.error = "Neveljaven vnos minimalnega odmerka"
-            hasErrors = true
+        val minDose: Double?
+        val maxDose: Double?
+        if (isFixedDoseMode) {
+            minDose = 0.0
+            maxDose = 0.0
+        } else {
+            minDose = minDoseStr.toDoubleOrNull()
+            if (minDose == null || minDose < 0) {
+                layoutMinDose.error = "Neveljaven vnos minimalnega odmerka"
+                hasErrors = true
+            }
+
+            maxDose = maxDoseStr.toDoubleOrNull()
+            if (maxDose == null || maxDose < 0) {
+                layoutMaxDose.error = "Neveljaven vnos maksimalnega odmerka"
+                hasErrors = true
+            }
+
+            if (minDose != null && maxDose != null && maxDose < minDose) {
+                layoutMaxDose.error = "Maksimalni odmerek mora biti večji ali enak minimalnemu"
+                hasErrors = true
+            }
         }
 
-        val maxDose = maxDoseStr.toDoubleOrNull()
-        if (maxDose == null || maxDose < 0) {
-            layoutMaxDose.error = "Neveljaven vnos maksimalnega odmerka"
-            hasErrors = true
-        }
-
-        if (minDose != null && maxDose != null && maxDose < minDose) {
-            layoutMaxDose.error = "Maksimalni odmerek mora biti večji ali enak minimalnemu"
-            hasErrors = true
-        }
-
-        val mgPerUnit = mgPerUnitStr.toDoubleOrNull()
-        if (mgPerUnit == null || mgPerUnit <= 0) {
+        val mgPerUnit = if (isFixedDoseMode) 0.0 else mgPerUnitStr.toDoubleOrNull()
+        if (!isFixedDoseMode && (mgPerUnit == null || mgPerUnit <= 0)) {
             layoutMgPerUnit.error = "Neveljaven vnos vsebnosti (> 0)"
             hasErrors = true
         }
 
-        val perMl = perMlStr.toDoubleOrNull()
-        if (perMl == null || perMl <= 0) {
+        val perMl = if (isFixedDoseMode) 0.0 else perMlStr.toDoubleOrNull()
+        if (!isFixedDoseMode && (perMl == null || perMl <= 0)) {
             layoutPerMl.error = "Neveljaven vnos volumna (> 0)"
             hasErrors = true
         }

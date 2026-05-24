@@ -25,7 +25,7 @@
     <color name="nav_add_btn_icon">#ffffff</color>
 
     <!-- Gender Toggle Colors (Light) -->
-    <color name="gender_checked_bg">#c14c2b</color> <!-- Strong terracotta -->
+    <color name="gender_checked_bg">#f08367</color> <!-- Lighter terracotta peach -->
     <color name="gender_unchecked_bg">#00000000</color>
     <color name="gender_checked_text">#ffffff</color>
     <color name="gender_unchecked_text">#2b3d2b</color>

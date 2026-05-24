@@ -51,15 +51,6 @@
                     android:textStyle="italic"
                     tools:text="amoksicilin" />
 
-                <TextView
-                    android:id="@+id/textMedicineStats"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    tools:text="Doza: 25-45 mg/kg | 400mg/5ml" />
-
             </LinearLayout>
 
             <!-- Delete Icon Button (Terracotta Squircle) -->
@@ -94,6 +85,15 @@
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/textMedicineStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="Doza: 25-45 mg/kg | 400mg/5ml" />
 
             <TextView
                 android:id="@+id/textMedicineNotesTitle"

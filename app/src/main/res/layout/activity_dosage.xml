@@ -394,7 +394,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="Končni odmerek">
+                    android:hint="Končna količina">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editCalcFinalDose"

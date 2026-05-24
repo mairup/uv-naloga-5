@@ -46,15 +46,10 @@
 
             <TextView
                 android:id="@+id/textPrescribedMedicineNotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textStyle="italic"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:visibility="gone"
-                tools:text="Opomba: Vzeti zjutraj na tešče"
-                tools:visibility="visible" />
+                tools:ignore="MissingConstraints" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
