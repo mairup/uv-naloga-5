@@ -15,4 +15,11 @@
     <!-- Terracotta Delete Button -->
     <color name="delete_btn_bg">#d46448</color>
     <color name="delete_btn_icon">#ffffff</color>
+
+    <!-- Nav Colors (Dark Mode Override) -->
+    <color name="nav_pill_selected_bg">#5c3a2e</color>
+    <color name="nav_pill_icon_active">#f0a58e</color>
+    <color name="nav_tab_text_active">#a5d6ab</color>
+    <color name="nav_add_btn_bg">#7aad8c</color>
+    <color name="nav_add_btn_icon">#ffffff</color>
 </resources>

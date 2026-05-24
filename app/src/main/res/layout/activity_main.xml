@@ -101,8 +101,8 @@
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
                 app:iconSize="24dp"
-                app:backgroundTint="?attr/colorPrimaryContainer"
-                app:iconTint="?attr/colorOnPrimaryContainer" />
+                app:backgroundTint="@color/nav_add_btn_bg"
+                app:iconTint="@color/nav_add_btn_icon" />
 
             <TextView
                 android:layout_width="wrap_content"

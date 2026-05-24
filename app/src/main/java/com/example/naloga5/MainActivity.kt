@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
@@ -156,35 +158,29 @@ class MainActivity : AppCompatActivity() {
         val textMedicines: TextView = findViewById(R.id.textMedicines)
 
         val colorOnBackground = getColorFromAttr(com.google.android.material.R.attr.colorOnBackground)
-        val colorOnSecondaryContainer = getColorFromAttr(com.google.android.material.R.attr.colorOnSecondaryContainer)
-        val colorPrimary = getColorFromAttr(com.google.android.material.R.attr.colorPrimary)
+        val pillIconActive = androidx.core.content.ContextCompat.getColor(this, R.color.nav_pill_icon_active)
+        val tabTextActive = androidx.core.content.ContextCompat.getColor(this, R.color.nav_tab_text_active)
 
         if (tabId == R.id.tabPeople) {
-            // Active: People
             pillPeople.setBackgroundResource(R.drawable.nav_item_pill_selected)
-            iconPeople.imageTintList = android.content.res.ColorStateList.valueOf(colorOnSecondaryContainer)
-            textPeople.setTextColor(colorPrimary)
+            iconPeople.imageTintList = android.content.res.ColorStateList.valueOf(pillIconActive)
+            textPeople.setTextColor(tabTextActive)
 
-            // Inactive: Medicines
             pillMedicines.setBackgroundResource(android.R.color.transparent)
             iconMedicines.imageTintList = android.content.res.ColorStateList.valueOf(colorOnBackground)
             textMedicines.setTextColor(colorOnBackground)
 
-            // Switch content
             textScreenTitle.text = "Seznam oseb"
             recyclerView.adapter = personAdapter
         } else if (tabId == R.id.tabMedicines) {
-            // Active: Medicines
             pillMedicines.setBackgroundResource(R.drawable.nav_item_pill_selected)
-            iconMedicines.imageTintList = android.content.res.ColorStateList.valueOf(colorOnSecondaryContainer)
-            textMedicines.setTextColor(colorPrimary)
+            iconMedicines.imageTintList = android.content.res.ColorStateList.valueOf(pillIconActive)
+            textMedicines.setTextColor(tabTextActive)
 
-            // Inactive: People
             pillPeople.setBackgroundResource(android.R.color.transparent)
             iconPeople.imageTintList = android.content.res.ColorStateList.valueOf(colorOnBackground)
             textPeople.setTextColor(colorOnBackground)
 
-            // Switch content
             textScreenTitle.text = "Zdravila"
             recyclerView.adapter = medicineAdapter
         }
