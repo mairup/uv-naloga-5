@@ -10,8 +10,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class PersonAdapter(
     private val persons: List<Person>,
+    private val medicines: List<Medicine>,
     private val onEditClick: (Person) -> Unit,
-    private val onDeleteClick: (Person) -> Unit
+    private val onDeleteClick: (Person) -> Unit,
+    private val onManageMedicinesClick: (Person) -> Unit
 ) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
     private var expandedPosition: Int = -1
@@ -21,21 +23,31 @@ class PersonAdapter(
         val textDetails: TextView = itemView.findViewById(R.id.textDetails)
         val textStats: TextView = itemView.findViewById(R.id.textStats)
         val btnDelete: View = itemView.findViewById(R.id.btnDelete)
+        val btnManagePersonMedicines: View = itemView.findViewById(R.id.btnManagePersonMedicines)
         val expandedActions: View = itemView.findViewById(R.id.expandedActions)
         val textPrescribedMeds: TextView = itemView.findViewById(R.id.textPrescribedMeds)
         val textBmi: TextView = itemView.findViewById(R.id.textBmi)
 
         fun bind(person: Person, position: Int) {
             textName.text = "${person.firstName} ${person.lastName}"
-            textDetails.text = "Spol: ${person.gender} | Rojstvo: ${person.dateOfBirth}"
-            textStats.text = "Teža: ${person.weightKg}kg | Višina: ${person.heightCm}cm"
+            val genderText = when (person.gender) {
+                "M" -> "Moški"
+                "Ž", "F" -> "Ženska"
+                "D", "O" -> "Drugo"
+                else -> person.gender
+            }
+            textDetails.text = "Spol: $genderText | Datum rojstva: ${person.dateOfBirth}"
+            textStats.text = "Teža: ${person.weightKg} kg | Višina: ${person.heightCm} cm"
 
             val heightM = person.heightCm / 100.0
             val bmi = if (heightM > 0) person.weightKg / (heightM * heightM) else 0.0
             textBmi.text = String.format("ITM: %.1f", bmi)
 
             if (person.prescribedMedicines.isNotEmpty()) {
-                textPrescribedMeds.text = person.prescribedMedicines.joinToString("\n") { "• $it" }
+                textPrescribedMeds.text = person.prescribedMedicines.joinToString("\n") { rx ->
+                    val medName = medicines.firstOrNull { it.id == rx.medicineId }?.name ?: rx.medicineId
+                    if (rx.dose.isNotBlank()) "• $medName (${rx.dose})" else "• $medName"
+                }
             } else {
                 textPrescribedMeds.text = "Brez predpisanih zdravil"
             }
@@ -58,8 +70,8 @@ class PersonAdapter(
 
             btnDelete.setOnClickListener {
                 MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle("Izbriši osebo")
-                    .setMessage("Ali ste prepričani, da želite izbrisati ${person.firstName} ${person.lastName}?")
+                    .setTitle("Izbris osebe")
+                    .setMessage("Ali ste prepričani, da želite izbrisati osebo ${person.firstName} ${person.lastName}?")
                     .setNegativeButton("Prekliči", null)
                     .setPositiveButton("Izbriši") { _, _ ->
                         val pos = adapterPosition
@@ -70,6 +82,10 @@ class PersonAdapter(
                         }
                     }
                     .show()
+            }
+
+            btnManagePersonMedicines.setOnClickListener {
+                onManageMedicinesClick(person)
             }
         }
     }

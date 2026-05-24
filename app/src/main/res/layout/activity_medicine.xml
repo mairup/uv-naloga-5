@@ -45,7 +45,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutName"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -60,7 +60,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutActiveIngredient"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -81,12 +81,12 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutMinDose"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:hint="Min doza (mg/kg)">
+                    android:hint="Minimalni odmerek (mg/kg)">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editMinDose"
@@ -97,12 +97,12 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutMaxDose"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    android:hint="Max doza (mg/kg)">
+                    android:hint="Maksimalni odmerek (mg/kg)">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editMaxDose"
@@ -121,12 +121,12 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutMgPerUnit"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:hint="Koncentracija (mg)">
+                    android:hint="Vsebnost učinkovine (mg)">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editMgPerUnit"
@@ -137,12 +137,12 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutPerMl"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    android:hint="na (ml)">
+                    android:hint="Volumen (ml)">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editPerMl"
@@ -155,7 +155,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutNotes"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
@@ -180,11 +180,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonCancel"
-                style="@style/Widget.Material3.Button.TextButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Prekliči" />
+                android:text="Prekliči"
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
     </ScrollView>

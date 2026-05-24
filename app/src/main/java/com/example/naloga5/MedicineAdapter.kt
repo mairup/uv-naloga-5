@@ -8,13 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MedicineAdapter(
-    private val medicines: List<Medicine>,
+    private var medicines: List<Medicine>,
     private val onEditClick: (Medicine) -> Unit,
     private val onDeleteClick: (Medicine) -> Unit
 ) : RecyclerView.Adapter<MedicineAdapter.MedicineViewHolder>() {
 
     private var expandedPosition: Int = -1
 
+    fun updateData(newMedicines: List<Medicine>) {
+        medicines = newMedicines
+        notifyDataSetChanged()
+    }
 
     inner class MedicineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textName: TextView = itemView.findViewById(R.id.textMedicineName)
@@ -28,7 +32,12 @@ class MedicineAdapter(
         fun bind(medicine: Medicine, position: Int) {
             textName.text = medicine.name
             textActiveIngredient.text = medicine.activeIngredient
-            textStats.text = "Doza: ${medicine.minDoseMgKg}-${medicine.maxDoseMgKg} mg/kg | ${medicine.mgPerUnit}mg/${medicine.perMl}ml"
+            
+            if (medicine.minDoseMgKg == 0.0 && medicine.maxDoseMgKg == 0.0) {
+                textStats.text = "Fiksni odmerek | ${medicine.mgPerUnit} mg na enoto"
+            } else {
+                textStats.text = "Odmerek: ${medicine.minDoseMgKg}-${medicine.maxDoseMgKg} mg/kg | ${medicine.mgPerUnit} mg / ${medicine.perMl} ml"
+            }
 
             val isExpanded = position == expandedPosition
             expandedActions.visibility = if (isExpanded) View.VISIBLE else View.GONE
@@ -59,7 +68,7 @@ class MedicineAdapter(
             btnDelete.setOnClickListener {
                 MaterialAlertDialogBuilder(itemView.context)
                     .setTitle("Izbriši zdravilo")
-                    .setMessage("Ali ste prepričani, da želite izbrisati ${medicine.name}?")
+                    .setMessage("Ali ste prepričani, da želite izbrisati zdravilo ${medicine.name}?")
                     .setNegativeButton("Prekliči", null)
                     .setPositiveButton("Izbriši") { _, _ ->
                         val pos = adapterPosition

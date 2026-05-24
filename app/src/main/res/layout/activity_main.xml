@@ -29,12 +29,12 @@
         android:id="@+id/bottomNavBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="80dp"
+        android:minHeight="100dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="@android:color/transparent"
         android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
+        android:paddingTop="20dp"
         android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,14 +55,14 @@
             <!-- Pill highlight container for icon -->
             <FrameLayout
                 android:id="@+id/pillPeople"
-                android:layout_width="64dp"
-                android:layout_height="32dp"
+                android:layout_width="72dp"
+                android:layout_height="36dp"
                 android:background="@drawable/nav_item_pill_selected">
 
                 <ImageView
                     android:id="@+id/iconPeople"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_people"
                     app:tint="?attr/colorOnSecondaryContainer" />
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Osebe"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="?attr/colorOnBackground" />
         </LinearLayout>
@@ -91,16 +91,18 @@
             <!-- FAB-like button (Pill shaped) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNavAdd"
-                android:layout_width="64dp"
-                android:layout_height="40dp"
+                android:layout_width="72dp"
+                android:layout_height="36dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:padding="0dp"
-                app:cornerRadius="20dp"
+                app:cornerRadius="18dp"
                 app:icon="@drawable/ic_add"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                app:iconSize="24dp"
+                app:iconSize="28dp"
                 app:backgroundTint="@color/nav_add_btn_bg"
                 app:iconTint="@color/nav_add_btn_icon" />
 
@@ -108,10 +110,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Ustvari"
-                android:textSize="12sp"
+                android:text="Dodaj"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="?attr/colorOnBackground" />
+
         </LinearLayout>
 
         <!-- Medicines Tab (Right) -->
@@ -129,14 +132,14 @@
             <!-- Pill highlight container for icon -->
             <FrameLayout
                 android:id="@+id/pillMedicines"
-                android:layout_width="64dp"
-                android:layout_height="32dp"
+                android:layout_width="72dp"
+                android:layout_height="36dp"
                 android:background="@android:color/transparent">
 
                 <ImageView
                     android:id="@+id/iconMedicines"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_medicine"
                     app:tint="?attr/colorOnBackground" />
@@ -148,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Zdravila"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="?attr/colorOnBackground" />
         </LinearLayout>
@@ -170,14 +173,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="16dp"
-            tools:listitem="@layout/item_person" />
+            android:orientation="vertical">
+            
+            <!-- Search bar (visible only on Medicines tab) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutSearchMedicine"
+                style="@style/Widget.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:hint="Išči zdravilo"
+                android:visibility="gone"
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editSearchMedicineMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp"
+                tools:listitem="@layout/item_person" />
+                
+        </LinearLayout>
 
     </FrameLayout>
 

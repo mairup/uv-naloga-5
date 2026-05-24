@@ -66,8 +66,8 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteMedicine"
                 style="@style/Widget.Material3.Button.IconButton.Filled"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="12dp"
                 android:contentDescription="Izbriši"
                 android:padding="0dp"
@@ -77,11 +77,11 @@
                 android:insetBottom="0dp"
                 app:icon="@drawable/ic_delete"
                 app:iconPadding="0dp"
-                app:iconSize="20dp"
+                app:iconSize="24dp"
                 app:iconGravity="textStart"
                 app:backgroundTint="@color/delete_btn_bg"
                 app:iconTint="@color/delete_btn_icon"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="14dp" />
 
         </LinearLayout>
 

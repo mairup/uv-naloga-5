@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Naloga 5</string>
-    <string name="dosage_title">Izračun doze</string>
+    <string name="dosage_title">Izračun odmerka</string>
     <string name="dosage_weight">Teža (kg)</string>
-    <string name="dosage_min_dose">Min doza (mg/kg)</string>
-    <string name="dosage_max_dose">Max doza (mg/kg)</string>
-    <string name="dosage_mg_per_unit">Koncentracija (mg)</string>
-    <string name="dosage_per_ml">na (ml)</string>
+    <string name="dosage_min_dose">Min. odmerek (mg/kg)</string>
+    <string name="dosage_max_dose">Max. odmerek (mg/kg)</string>
+    <string name="dosage_mg_per_unit">Vsebnost učinkovine (mg)</string>
+    <string name="dosage_per_ml">Volumen (ml)</string>
     <string name="dosage_calculate">Izračunaj</string>
     <string name="dosage_confirm">Potrdi</string>
     <string name="dosage_cancel">Prekliči</string>

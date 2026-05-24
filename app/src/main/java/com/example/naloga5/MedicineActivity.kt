@@ -151,35 +151,35 @@ class MedicineActivity : AppCompatActivity() {
 
         val minDose = minDoseStr.toDoubleOrNull()
         if (minDose == null || minDose < 0) {
-            layoutMinDose.error = "Vnesite veljavno dozo"
+            layoutMinDose.error = "Neveljaven vnos minimalnega odmerka"
             hasErrors = true
         }
 
         val maxDose = maxDoseStr.toDoubleOrNull()
         if (maxDose == null || maxDose < 0) {
-            layoutMaxDose.error = "Vnesite veljavno dozo"
+            layoutMaxDose.error = "Neveljaven vnos maksimalnega odmerka"
             hasErrors = true
         }
 
         if (minDose != null && maxDose != null && maxDose < minDose) {
-            layoutMaxDose.error = "Maksimalna doza mora biti večja ali enaka minimalni"
+            layoutMaxDose.error = "Maksimalni odmerek mora biti večji ali enak minimalnemu"
             hasErrors = true
         }
 
         val mgPerUnit = mgPerUnitStr.toDoubleOrNull()
         if (mgPerUnit == null || mgPerUnit <= 0) {
-            layoutMgPerUnit.error = "Vnesite koncentracijo (> 0)"
+            layoutMgPerUnit.error = "Neveljaven vnos vsebnosti (> 0)"
             hasErrors = true
         }
 
         val perMl = perMlStr.toDoubleOrNull()
         if (perMl == null || perMl <= 0) {
-            layoutPerMl.error = "Vnesite volumen (> 0)"
+            layoutPerMl.error = "Neveljaven vnos volumna (> 0)"
             hasErrors = true
         }
 
         if (hasErrors) {
-            Snackbar.make(findViewById(android.R.id.content), "Izpolnite vsa polja pravilno", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(findViewById(android.R.id.content), "Preverite pravilnost vnesenih podatkov", Snackbar.LENGTH_SHORT).show()
             return
         }
 

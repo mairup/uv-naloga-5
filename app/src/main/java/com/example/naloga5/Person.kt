@@ -10,7 +10,7 @@ data class Person(
     val dateOfBirth: String, 
     val weightKg: Double,
     val heightCm: Double,
-    val prescribedMedicines: List<String> = emptyList()
+    val prescribedMedicines: List<Prescription> = emptyList()
 ) : Serializable {
     // Used by ArrayAdapter inside Spinner to display the name
     override fun toString(): String = "$firstName $lastName"

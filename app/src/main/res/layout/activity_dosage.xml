@@ -2,220 +2,453 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
     tools:context=".DosageActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
-        app:liftOnScroll="false">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:title="@string/dosage_title"
-            app:titleCentered="true"
-            app:titleTextColor="?attr/colorOnBackground"
-            app:navigationIconTint="?attr/colorOnBackground"
-            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
-            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/content_layout"
-            android:layout_width="match_parent"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:background="@android:color/transparent"
+            app:elevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:liftOnScroll="false">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutWeight"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+                app:navigationIconTint="?attr/colorOnBackground"
+                app:title="Predpisana zdravila"
+                app:titleCentered="true"
+                app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+                app:titleTextColor="?attr/colorOnBackground" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/textPersonLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="20dp"
+            android:text="Oseba:"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+            android:textColor="?attr/colorOnBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPersonHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textPersonLabel"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/dosage_weight"
-                app:layout_constraintTop_toTopOf="parent">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editWeight"
+                <TextView
+                    android:id="@+id/textPersonName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textStyle="bold"
+                    tools:text="Janez Novak" />
 
-            <LinearLayout
-                android:id="@+id/layoutDoseInterval"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/layoutWeight">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutMinDose"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/textPersonDetails"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/dosage_min_dose">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editMinDose"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutMaxDose"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:hint="@string/dosage_max_dose">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editMaxDose"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    tools:text="Spol: M | Datum rojstva: 1990-01-01 | Teža: 85.0 kg" />
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
-                android:id="@+id/layoutConcentration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/layoutDoseInterval">
+        <TextView
+            android:id="@+id/textMedicinesLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="20dp"
+            android:text="Zdravila:"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+            android:textColor="?attr/colorOnBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardPersonHeader" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutMgPerUnit"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/dosage_mg_per_unit">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerAssignedMedicines"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textMedicinesLabel"
+            tools:listitem="@layout/item_prescribed_medicine" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editMgPerUnit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/textNoAssignedMedicines"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="32dp"
+            android:text="Oseba nima predpisanih zdravil"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerAssignedMedicines"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recyclerAssignedMedicines"
+            tools:visibility="visible" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutPerMl"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:hint="@string/dosage_per_ml">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editPerMl"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottomActionBar"
+            android:layout_width="0dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCalculate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:paddingVertical="12dp"
-                android:text="@string/dosage_calculate"
-                app:backgroundTint="@color/calculate_btn_bg"
+                android:id="@+id/btnCancelExit"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:insetTop="0dp"
+                android:padding="0dp"
+                app:backgroundTint="@color/fab_cancel_bg"
+                app:cornerRadius="30dp"
+                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:iconTint="@color/fab_cancel_icon"
+                app:strokeColor="@color/fab_cancel_border"
+                app:strokeWidth="2dp"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnCreateAssignedMedicine"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCreateAssignedMedicine"
+                android:layout_width="wrap_content"
+                android:layout_height="83dp"
+                android:minHeight="83dp"
+                android:paddingHorizontal="24dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Dodaj"
                 android:textColor="@color/calculate_btn_text"
-                app:layout_constraintTop_toBottomOf="@id/layoutConcentration" />
+                android:textSize="18sp"
+                app:backgroundTint="@color/calculate_btn_bg"
+                app:cornerRadius="18dp"
+                app:icon="@drawable/ic_add"
+                app:iconPadding="10dp"
+                app:iconSize="28dp"
+                app:iconTint="@color/calculate_btn_text"
+                app:layout_constraintStart_toEndOf="@id/btnCancelExit"
+                app:layout_constraintEnd_toStartOf="@id/btnSavePrescriptions"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardResult"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSavePrescriptions"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:insetTop="0dp"
+                android:padding="0dp"
+                app:backgroundTint="@color/fab_save_bg"
+                app:cornerRadius="30dp"
+                app:icon="@drawable/ic_save"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:iconTint="@color/fab_save_icon"
+                app:strokeColor="@color/fab_save_border"
+                app:strokeWidth="2dp"
+                app:layout_constraintStart_toEndOf="@id/btnCreateAssignedMedicine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/pickerOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/pickerScrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="#80000000" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/pickerCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="?attr/colorPrimaryContainer"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:layout_constraintTop_toBottomOf="@id/btnCalculate"
-                app:strokeWidth="0dp"
-                tools:visibility="visible">
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:hint="Išči zdravilo">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editSearchMedicine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerAllMedicines"
+                    android:layout_width="match_parent"
+                    android:layout_height="340dp"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="4dp"
+                    tools:listitem="@layout/item_prescribed_medicine" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClosePicker"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="Zapri" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
+
+    <!-- Calculator Overlay -->
+    <FrameLayout
+        android:id="@+id/calculatorOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/calculatorScrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="#80000000" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/calculatorCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/textCalcTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="?attr/colorOnSurface"
+                    tools:text="Calpol" />
+
+                <TextView
+                    android:id="@+id/textCalcSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="paracetamol • Janez Novak (85.0 kg)" />
+
+                <!-- Weight-relative calculation section -->
                 <LinearLayout
+                    android:id="@+id/layoutRelativeCalc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:layout_marginTop="16dp">
 
                     <TextView
-                        android:id="@+id/textResultTitle"
+                        android:id="@+id/textCalcRange"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Rezultat"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnPrimaryContainer" />
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="?attr/colorPrimary"
+                        tools:text="Priporočen odmerek: 3.54 – 5.31 ml" />
 
-                    <TextView
-                        android:id="@+id/textResultValues"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        tools:text="100.0 mg - 200.0 mg\n2.00 ml - 4.00 ml" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Odmerek (mg/kg)">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editCalcMgKg"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCalculateDose"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Izračunaj"
+                            android:textColor="@color/calculate_btn_text"
+                            app:backgroundTint="@color/calculate_btn_bg" />
+                    </LinearLayout>
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <LinearLayout
-                android:id="@+id/layoutActions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/cardResult">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnConfirm"
-                    style="@style/Widget.Material3.Button"
+                <!-- Final dose input (always visible) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="12dp"
-                    android:text="@string/dosage_confirm" />
+                    android:layout_marginTop="16dp"
+                    android:hint="Končni odmerek">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCancel"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editCalcFinalDose"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Notes input (always visible, optional) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/dosage_cancel" />
+                    android:layout_marginTop="16dp"
+                    android:hint="Opombe">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editCalcNotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Action buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancelCalc"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Prekliči" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSaveCalc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Shrani"
+                        android:textColor="@color/calculate_btn_text"
+                        app:backgroundTint="@color/calculate_btn_bg" />
+                </LinearLayout>
+
             </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

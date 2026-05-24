@@ -12,13 +12,22 @@
     <color name="calculate_btn_bg">#f39279</color> <!-- Brighter terracotta peach -->
     <color name="calculate_btn_text">#2b1008</color>
 
+    <!-- Floating Action Bar Colors (Dark Mode Override) -->
+    <color name="fab_cancel_bg">#3d2621</color>
+    <color name="fab_cancel_border">#f39279</color>
+    <color name="fab_cancel_icon">#f5a58e</color>
+    <color name="fab_save_bg">#1c2e22</color>
+    <color name="fab_save_border">#8ab68d</color>
+    <color name="fab_save_icon">#8ab68d</color>
+
     <!-- Terracotta Delete Button -->
     <color name="delete_btn_bg">#d46448</color>
     <color name="delete_btn_icon">#ffffff</color>
 
     <!-- Nav Colors (Dark Mode Override) -->
     <color name="nav_pill_selected_bg">#5c3a2e</color>
-    <color name="nav_pill_icon_active">#f0a58e</color>
+    <color name="nav_pill_icon_active">#f5c4b2</color>
+    <color name="nav_pill_icon_inactive">#7a6058</color>
     <color name="nav_tab_text_active">#a5d6ab</color>
     <color name="nav_add_btn_bg">#7aad8c</color>
     <color name="nav_add_btn_icon">#ffffff</color>

@@ -11,14 +11,15 @@
 
     <color name="terracotta_secondary">#e48e73</color>
     <color name="terracotta_container">#fbeae3</color>
-    <color name="delete_btn_bg">#c14c2b</color>
+    <color name="delete_btn_bg">#f08367</color>
     <color name="delete_btn_icon">#ffffff</color>
 
     <color name="beige_surface">#e2efe7</color>
     <color name="sage_border">#8cb89a</color>
 
     <color name="nav_pill_selected_bg">#f4c8b8</color>
-    <color name="nav_pill_icon_active">#6d3420</color>
+    <color name="nav_pill_icon_active">#8c4a33</color>
+    <color name="nav_pill_icon_inactive">#a07060</color>
     <color name="nav_tab_text_active">#2b5a3f</color>
     <color name="nav_add_btn_bg">#558b6e</color>
     <color name="nav_add_btn_icon">#ffffff</color>
@@ -34,6 +35,14 @@
     <!-- Calculate Button Colors (Light) -->
     <color name="calculate_btn_bg">#f08367</color> <!-- Strong terracotta peach -->
     <color name="calculate_btn_text">#ffffff</color>
+
+    <!-- Floating Action Bar Colors (Light) -->
+    <color name="fab_cancel_bg">#fde8e3</color> <!-- Washed red -->
+    <color name="fab_cancel_border">#f08367</color> <!-- Peach, matches dodaj bg -->
+    <color name="fab_cancel_icon">#b94a30</color>
+    <color name="fab_save_bg">#d4e8da</color> <!-- Washed green -->
+    <color name="fab_save_border">#558b6e</color> <!-- Strong green -->
+    <color name="fab_save_icon">#558b6e</color>
 
     <!-- Dark Earthy Palette -->
     <color name="dark_sage_primary">#8ab68d</color>

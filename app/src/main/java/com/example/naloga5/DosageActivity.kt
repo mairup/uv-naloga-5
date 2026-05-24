@@ -4,80 +4,116 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.animation.OvershootInterpolator
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import java.util.UUID
 
 class DosageActivity : AppCompatActivity() {
 
-    private lateinit var editWeight: TextInputEditText
-    private lateinit var editMinDose: TextInputEditText
-    private lateinit var editMaxDose: TextInputEditText
-    private lateinit var editMgPerUnit: TextInputEditText
-    private lateinit var editPerMl: TextInputEditText
-    private lateinit var textResultValues: TextView
-    private lateinit var btnCalculate: MaterialButton
-    private lateinit var btnConfirm: MaterialButton
-    private lateinit var btnCancel: MaterialButton
+    companion object {
+        const val EXTRA_PERSON = "EXTRA_PERSON"
+        const val EXTRA_ALL_MEDICINES = "EXTRA_ALL_MEDICINES"
+        const val EXTRA_UPDATED_PERSON = "EXTRA_UPDATED_PERSON"
+    }
 
-    private lateinit var layoutWeight: TextInputLayout
-    private lateinit var layoutMinDose: TextInputLayout
-    private lateinit var layoutMaxDose: TextInputLayout
-    private lateinit var layoutMgPerUnit: TextInputLayout
-    private lateinit var layoutPerMl: TextInputLayout
+    private lateinit var selectedPerson: Person
+    private val allMedicines = mutableListOf<Medicine>()
+    private val assignedItems = mutableListOf<PrescribedMedicineItem>()
+    private val filteredPickerItems = mutableListOf<PrescribedMedicineItem>()
 
-    private lateinit var cardResult: View
+    private lateinit var assignedAdapter: PrescribedMedicineAdapter
+    private lateinit var pickerAdapter: PrescribedMedicineAdapter
 
-    private var lastCalculatedResult: String? = null
+    private lateinit var textPersonName: TextView
+    private lateinit var textPersonDetails: TextView
+    private lateinit var textNoAssignedMedicines: TextView
+    private lateinit var recyclerAssignedMedicines: RecyclerView
+    private lateinit var recyclerAllMedicines: RecyclerView
+    private lateinit var btnCancelExit: MaterialButton
+    private lateinit var btnCreateAssignedMedicine: MaterialButton
+    private lateinit var btnSavePrescriptions: MaterialButton
+    private lateinit var btnClosePicker: MaterialButton
+    private lateinit var editSearchMedicine: TextInputEditText
+    private lateinit var pickerOverlay: View
+    private lateinit var pickerScrim: View
+    private lateinit var pickerCard: View
+
+    // Calculator overlay views
+    private lateinit var calculatorOverlay: View
+    private lateinit var calculatorScrim: View
+    private lateinit var calculatorCard: View
+    private lateinit var textCalcTitle: TextView
+    private lateinit var textCalcSubtitle: TextView
+    private lateinit var layoutRelativeCalc: LinearLayout
+    private lateinit var textCalcRange: TextView
+    private lateinit var editCalcMgKg: TextInputEditText
+    private lateinit var btnCalculateDose: MaterialButton
+    private lateinit var editCalcFinalDose: TextInputEditText
+    private lateinit var editCalcNotes: TextInputEditText
+    private lateinit var btnCancelCalc: MaterialButton
+    private lateinit var btnSaveCalc: MaterialButton
+
+    private var currentCalcItem: PrescribedMedicineItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_dosage)
 
+        if (!readInputData()) {
+            finish()
+            return
+        }
+
         setupWindowInsets()
         initViews()
+        populatePersonHeader()
+        setupLists()
+        setupBackNavigationHandling()
         setupListeners()
         setupToolbar()
-
-        // Pre-fill weight if provided
-        val weight = intent.getDoubleExtra("EXTRA_WEIGHT", 0.0)
-        if (weight > 0) {
-            editWeight.setText(weight.toString())
-        }
+        updateEmptyAssignedState()
     }
 
     private fun setupToolbar() {
         val toolbar = findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar)
-        toolbar.setNavigationOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { handleExit() }
     }
 
     private fun setupWindowInsets() {
-        val mainLayout = findViewById<android.view.View>(R.id.main_layout)
+        val mainLayout = findViewById<android.view.View>(R.id.mainLayout)
         val appBarLayout = findViewById<android.view.View>(R.id.appBarLayout)
-        val contentLayout = findViewById<android.view.View>(R.id.content_layout)
+        val bottomBar = findViewById<android.view.View>(R.id.bottomActionBar)
 
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
-            // Pad the transparent AppBarLayout down so it doesn't overlap the status bar / cutout
+
             appBarLayout.setPadding(0, systemBars.top, 0, 0)
-            
-            // Pad bottom of scrolling content layout to clear navigation bar
+
             val density = resources.displayMetrics.density
-            val bottomPaddingPx = systemBars.bottom + (24 * density).toInt()
-            contentLayout.setPadding(
-                contentLayout.paddingLeft,
-                contentLayout.paddingTop,
-                contentLayout.paddingRight,
-                bottomPaddingPx
+            val buttonBottomMargin = systemBars.bottom + (12 * density).toInt()
+            val params = bottomBar.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+            params.bottomMargin = buttonBottomMargin
+            bottomBar.layoutParams = params
+
+            val assignedRecycler = findViewById<RecyclerView>(R.id.recyclerAssignedMedicines)
+            assignedRecycler.setPadding(
+                assignedRecycler.paddingLeft,
+                assignedRecycler.paddingTop,
+                assignedRecycler.paddingRight,
+                systemBars.bottom + (90 * density).toInt()
             )
 
             insets
@@ -85,115 +121,373 @@ class DosageActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        editWeight = findViewById(R.id.editWeight)
-        editMinDose = findViewById(R.id.editMinDose)
-        editMaxDose = findViewById(R.id.editMaxDose)
-        editMgPerUnit = findViewById(R.id.editMgPerUnit)
-        editPerMl = findViewById(R.id.editPerMl)
-        textResultValues = findViewById(R.id.textResultValues)
-        cardResult = findViewById(R.id.cardResult)
-        btnCalculate = findViewById(R.id.btnCalculate)
-        btnConfirm = findViewById(R.id.btnConfirm)
-        btnCancel = findViewById(R.id.btnCancel)
+        textPersonName = findViewById(R.id.textPersonName)
+        textPersonDetails = findViewById(R.id.textPersonDetails)
+        textNoAssignedMedicines = findViewById(R.id.textNoAssignedMedicines)
+        recyclerAssignedMedicines = findViewById(R.id.recyclerAssignedMedicines)
+        recyclerAllMedicines = findViewById(R.id.recyclerAllMedicines)
+        btnCancelExit = findViewById(R.id.btnCancelExit)
+        btnCreateAssignedMedicine = findViewById(R.id.btnCreateAssignedMedicine)
+        btnSavePrescriptions = findViewById(R.id.btnSavePrescriptions)
+        editSearchMedicine = findViewById(R.id.editSearchMedicine)
+        btnClosePicker = findViewById(R.id.btnClosePicker)
+        pickerOverlay = findViewById(R.id.pickerOverlay)
+        pickerScrim = findViewById(R.id.pickerScrim)
+        pickerCard = findViewById(R.id.pickerCard)
 
-        layoutWeight = findViewById(R.id.layoutWeight)
-        layoutMinDose = findViewById(R.id.layoutMinDose)
-        layoutMaxDose = findViewById(R.id.layoutMaxDose)
-        layoutMgPerUnit = findViewById(R.id.layoutMgPerUnit)
-        layoutPerMl = findViewById(R.id.layoutPerMl)
+        pickerOverlay.visibility = View.GONE
+        pickerScrim.alpha = 0f
+        pickerCard.alpha = 0f
 
-        // Clear error states when text changes
-        editWeight.doAfterTextChanged { layoutWeight.error = null }
-        editMinDose.doAfterTextChanged { layoutMinDose.error = null }
-        editMaxDose.doAfterTextChanged { layoutMaxDose.error = null }
-        editMgPerUnit.doAfterTextChanged { layoutMgPerUnit.error = null }
-        editPerMl.doAfterTextChanged { layoutPerMl.error = null }
+        // Calculator overlay views
+        calculatorOverlay = findViewById(R.id.calculatorOverlay)
+        calculatorScrim = findViewById(R.id.calculatorScrim)
+        calculatorCard = findViewById(R.id.calculatorCard)
+        textCalcTitle = findViewById(R.id.textCalcTitle)
+        textCalcSubtitle = findViewById(R.id.textCalcSubtitle)
+        layoutRelativeCalc = findViewById(R.id.layoutRelativeCalc)
+        textCalcRange = findViewById(R.id.textCalcRange)
+        editCalcMgKg = findViewById(R.id.editCalcMgKg)
+        btnCalculateDose = findViewById(R.id.btnCalculateDose)
+        editCalcFinalDose = findViewById(R.id.editCalcFinalDose)
+        editCalcNotes = findViewById(R.id.editCalcNotes)
+        btnCancelCalc = findViewById(R.id.btnCancelCalc)
+        btnSaveCalc = findViewById(R.id.btnSaveCalc)
+
+        calculatorOverlay.visibility = View.GONE
+        calculatorScrim.alpha = 0f
+        calculatorCard.alpha = 0f
+    }
+
+    private fun populatePersonHeader() {
+        textPersonName.text = "${selectedPerson.firstName} ${selectedPerson.lastName}"
+        val genderText = when (selectedPerson.gender) {
+            "M" -> "Moški"
+            "Ž", "F" -> "Ženska"
+            "D", "O" -> "Drugo"
+            else -> selectedPerson.gender
+        }
+        textPersonDetails.text = "Spol: $genderText | Datum rojstva: ${selectedPerson.dateOfBirth} | Teža: ${selectedPerson.weightKg} kg"
+    }
+
+    private fun setupLists() {
+        // Build assigned items from prescriptions
+        assignedItems.clear()
+        selectedPerson.prescribedMedicines.forEach { rx ->
+            val med = allMedicines.firstOrNull { it.id == rx.medicineId }
+            if (med != null) {
+                assignedItems.add(PrescribedMedicineItem(med, rx.dose, rx.notes))
+            }
+        }
+
+        assignedAdapter = PrescribedMedicineAdapter(
+            items = assignedItems,
+            showRemoveAction = true,
+            onRemoveClick = { item -> removeAssignedItem(item) },
+            onItemLongClick = { item -> showCalculator(item) }
+        )
+
+        // Build picker items from all medicines
+        filteredPickerItems.clear()
+        filteredPickerItems.addAll(allMedicines.map { PrescribedMedicineItem(it) })
+
+        pickerAdapter = PrescribedMedicineAdapter(
+            items = filteredPickerItems,
+            showRemoveAction = false,
+            onItemClick = { item ->
+                if (assignedItems.any { it.medicine.id == item.medicine.id }) {
+                    Snackbar.make(findViewById(android.R.id.content), "Zdravilo je že dodano", Snackbar.LENGTH_SHORT).show()
+                    return@PrescribedMedicineAdapter
+                }
+                assignedItems.add(PrescribedMedicineItem(item.medicine))
+                assignedAdapter.notifyItemInserted(assignedItems.size - 1)
+                updateEmptyAssignedState()
+                hidePicker()
+            }
+        )
+
+        recyclerAssignedMedicines.layoutManager = LinearLayoutManager(this)
+        recyclerAssignedMedicines.adapter = assignedAdapter
+
+        recyclerAllMedicines.layoutManager = LinearLayoutManager(this)
+        recyclerAllMedicines.adapter = pickerAdapter
     }
 
     private fun setupListeners() {
-        btnCalculate.setOnClickListener { calculateDosage() }
-        btnConfirm.setOnClickListener { confirmResult() }
-        btnCancel.setOnClickListener { finish() }
+        btnCreateAssignedMedicine.setOnClickListener { showPicker() }
+        btnCancelExit.setOnClickListener { handleExit() }
+        btnSavePrescriptions.setOnClickListener { finishWithResult() }
+        pickerScrim.setOnClickListener { hidePicker() }
+        btnClosePicker.setOnClickListener { hidePicker() }
+        pickerCard.setOnClickListener { /* consume click */ }
+
+        editSearchMedicine.doAfterTextChanged { text ->
+            val query = text?.toString()?.trim() ?: ""
+            filteredPickerItems.clear()
+            if (query.isEmpty()) {
+                filteredPickerItems.addAll(allMedicines.map { PrescribedMedicineItem(it) })
+            } else {
+                filteredPickerItems.addAll(allMedicines.filter {
+                    it.name.contains(query, ignoreCase = true) ||
+                    it.activeIngredient.contains(query, ignoreCase = true)
+                }.map { PrescribedMedicineItem(it) })
+            }
+            pickerAdapter.notifyDataSetChanged()
+        }
+
+        // Calculator listeners
+        calculatorScrim.setOnClickListener { hideCalculator() }
+        btnCancelCalc.setOnClickListener { hideCalculator() }
+        calculatorCard.setOnClickListener { /* consume click */ }
+
+        btnCalculateDose.setOnClickListener {
+            val item = currentCalcItem ?: return@setOnClickListener
+            val mgKg = editCalcMgKg.text?.toString()?.toDoubleOrNull()
+            if (mgKg == null) {
+                Snackbar.make(findViewById(android.R.id.content), "Vnesite veljavno vrednost mg/kg", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val med = item.medicine
+            val weight = selectedPerson.weightKg
+            val totalMg = mgKg * weight
+
+            if (med.perMl != 1.0) {
+                // Syrup: convert mg to ml
+                val ml = totalMg * med.perMl / med.mgPerUnit
+                editCalcFinalDose.setText(String.format("%.2f ml", ml))
+            } else {
+                // Pills/tablets: convert mg to units
+                val units = totalMg / med.mgPerUnit
+                editCalcFinalDose.setText(String.format("%.2f enot", units))
+            }
+
+            // Close keyboard
+            val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+            imm.hideSoftInputFromWindow(editCalcMgKg.windowToken, 0)
+        }
+
+        btnSaveCalc.setOnClickListener {
+            val item = currentCalcItem ?: return@setOnClickListener
+            val dose = editCalcFinalDose.text?.toString()?.trim() ?: ""
+            val notes = editCalcNotes.text?.toString()?.trim() ?: ""
+            item.dose = dose
+            item.notes = notes
+            val index = assignedItems.indexOfFirst { it.medicine.id == item.medicine.id }
+            if (index != -1) {
+                assignedAdapter.notifyItemChanged(index)
+            }
+            hideCalculator()
+        }
     }
 
-    private fun calculateDosage() {
-        var isValid = true
-
-        layoutWeight.error = null
-        layoutMinDose.error = null
-        layoutMaxDose.error = null
-        layoutMgPerUnit.error = null
-        layoutPerMl.error = null
-
-        val weight = editWeight.text.toString().toDoubleOrNull()
-        if (weight == null || weight <= 0) {
-            layoutWeight.error = "Vnesite veljavno težo"
-            isValid = false
-        }
-
-        val minDoseMgKg = editMinDose.text.toString().toDoubleOrNull()
-        if (minDoseMgKg == null || minDoseMgKg < 0) {
-            layoutMinDose.error = "Vnesite odmerek"
-            isValid = false
-        }
-
-        val maxDoseMgKg = editMaxDose.text.toString().toDoubleOrNull()
-        if (maxDoseMgKg == null || maxDoseMgKg < 0) {
-            layoutMaxDose.error = "Vnesite odmerek"
-            isValid = false
-        }
-
-        val mgPerUnit = editMgPerUnit.text.toString().toDoubleOrNull()
-        if (mgPerUnit == null || mgPerUnit <= 0) {
-            layoutMgPerUnit.error = "Vnesite koncentracijo (> 0)"
-            isValid = false
-        }
-
-        val perMl = editPerMl.text.toString().toDoubleOrNull()
-        if (perMl == null || perMl <= 0) {
-            layoutPerMl.error = "Vnesite volumen"
-            isValid = false
-        }
-
-        if (!isValid || weight == null || minDoseMgKg == null || maxDoseMgKg == null || mgPerUnit == null || perMl == null) {
-            Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_invalid_input), Snackbar.LENGTH_SHORT).show()
-            return
-        }
-
-        // Hide soft keyboard on successful validation pass
-        val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-        val focusedView = currentFocus ?: btnCalculate
-        imm.hideSoftInputFromWindow(focusedView.windowToken, 0)
-
-        // Calculation:
-        // Dose range in mg: (minDose * weight) to (maxDose * weight)
-        val minMg = minDoseMgKg * weight
-        val maxMg = maxDoseMgKg * weight
-
-        // Dose range in ml: (mg / concentration) * perMl
-        val minMl = (minMg / mgPerUnit) * perMl
-        val maxMl = (maxMg / mgPerUnit) * perMl
-
-        val resultStr = getString(R.string.dosage_result_prefix) + "\n" +
-                String.format("%.1f mg - %.1f mg\n", minMg, maxMg) +
-                String.format("%.2f ml - %.2f ml", minMl, maxMl)
-
-        val valuesStr = String.format("%.1f mg - %.1f mg\n", minMg, maxMg) +
-                String.format("%.2f ml - %.2f ml", minMl, maxMl)
-
-        lastCalculatedResult = resultStr
-        textResultValues.text = valuesStr
-        cardResult.visibility = View.VISIBLE
+    private fun setupBackNavigationHandling() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (calculatorOverlay.visibility == View.VISIBLE) {
+                    hideCalculator()
+                } else if (pickerOverlay.visibility == View.VISIBLE) {
+                    hidePicker()
+                } else {
+                    handleExit()
+                }
+            }
+        })
     }
 
-    private fun confirmResult() {
-        if (lastCalculatedResult == null) {
-            Snackbar.make(findViewById(android.R.id.content), "Najprej izvedite izračun", Snackbar.LENGTH_SHORT).show()
-            return
+    private fun showPicker() {
+        if (pickerOverlay.visibility == View.VISIBLE) return
+
+        pickerOverlay.visibility = View.VISIBLE
+        pickerOverlay.post {
+            val density = resources.displayMetrics.density
+            val startOffsetY = 36f * density
+            pickerScrim.alpha = 0f
+            pickerCard.alpha = 0f
+            pickerCard.translationY = startOffsetY
+
+            pickerScrim.animate()
+                .alpha(1f)
+                .setDuration(180)
+                .start()
+
+            pickerCard.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(240)
+                .setInterpolator(OvershootInterpolator(0.9f))
+                .start()
         }
-        val resultIntent = Intent()
-        resultIntent.putExtra("EXTRA_RESULT", lastCalculatedResult)
-        setResult(Activity.RESULT_OK, resultIntent)
+    }
+
+    private fun hidePicker() {
+        if (pickerOverlay.visibility != View.VISIBLE) return
+
+        val density = resources.displayMetrics.density
+        val endOffsetY = 24f * density
+
+        pickerScrim.animate()
+            .alpha(0f)
+            .setDuration(150)
+            .start()
+
+        pickerCard.animate()
+            .alpha(0f)
+            .translationY(endOffsetY)
+            .setDuration(170)
+            .withEndAction {
+                pickerOverlay.visibility = View.GONE
+            }
+            .start()
+    }
+
+    private fun showCalculator(item: PrescribedMedicineItem) {
+        currentCalcItem = item
+        val med = item.medicine
+
+        textCalcTitle.text = med.name
+        textCalcSubtitle.text = "${med.activeIngredient} • ${selectedPerson.firstName} ${selectedPerson.lastName} (${selectedPerson.weightKg} kg)"
+
+        val isRelative = med.minDoseMgKg != 0.0 || med.maxDoseMgKg != 0.0
+
+        if (isRelative) {
+            layoutRelativeCalc.visibility = View.VISIBLE
+            val weight = selectedPerson.weightKg
+            val minMg = med.minDoseMgKg * weight
+            val maxMg = med.maxDoseMgKg * weight
+
+            val rangeText = StringBuilder().apply {
+                append("Priporočeni odmerek: ${String.format("%.2f", med.minDoseMgKg)} – ${String.format("%.2f", med.maxDoseMgKg)} mg/kg\n")
+                append("Skupna aktivna snov: ${String.format("%.2f", minMg)} – ${String.format("%.2f", maxMg)} mg\n")
+                if (med.perMl != 1.0) {
+                    val minMl = minMg * med.perMl / med.mgPerUnit
+                    val maxMl = maxMg * med.perMl / med.mgPerUnit
+                    append("Koncentracija: ${String.format("%.1f", med.mgPerUnit)} mg / ${String.format("%.1f", med.perMl)} ml\n")
+                    append("Izračunan volumen: ${String.format("%.2f", minMl)} – ${String.format("%.2f", maxMl)} ml")
+                } else {
+                    val minUnits = minMg / med.mgPerUnit
+                    val maxUnits = maxMg / med.mgPerUnit
+                    append("Jakost: ${String.format("%.1f", med.mgPerUnit)} mg / enoto\n")
+                    append("Izračunano število enot: ${String.format("%.2f", minUnits)} – ${String.format("%.2f", maxUnits)} enot")
+                }
+            }.toString()
+
+            textCalcRange.text = rangeText
+            editCalcMgKg.setText("")
+        } else {
+            layoutRelativeCalc.visibility = View.GONE
+        }
+
+        editCalcFinalDose.setText(item.dose)
+        editCalcNotes.setText(item.notes)
+
+        if (calculatorOverlay.visibility == View.VISIBLE) return
+
+        calculatorOverlay.visibility = View.VISIBLE
+        calculatorOverlay.post {
+            val density = resources.displayMetrics.density
+            val startOffsetY = 36f * density
+            calculatorScrim.alpha = 0f
+            calculatorCard.alpha = 0f
+            calculatorCard.translationY = startOffsetY
+
+            calculatorScrim.animate()
+                .alpha(1f)
+                .setDuration(180)
+                .start()
+
+            calculatorCard.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(240)
+                .setInterpolator(OvershootInterpolator(0.9f))
+                .start()
+        }
+    }
+
+    private fun hideCalculator() {
+        if (calculatorOverlay.visibility != View.VISIBLE) return
+        currentCalcItem = null
+
+        val density = resources.displayMetrics.density
+        val endOffsetY = 24f * density
+
+        calculatorScrim.animate()
+            .alpha(0f)
+            .setDuration(150)
+            .start()
+
+        calculatorCard.animate()
+            .alpha(0f)
+            .translationY(endOffsetY)
+            .setDuration(170)
+            .withEndAction {
+                calculatorOverlay.visibility = View.GONE
+            }
+            .start()
+    }
+
+    private fun removeAssignedItem(item: PrescribedMedicineItem) {
+        val index = assignedItems.indexOfFirst { it.medicine.id == item.medicine.id }
+        if (index == -1) return
+
+        assignedItems.removeAt(index)
+        assignedAdapter.notifyItemRemoved(index)
+        updateEmptyAssignedState()
+    }
+
+    private fun handleExit() {
+        val currentPrescriptions = assignedItems.map { Prescription(it.medicine.id, it.dose, it.notes) }
+        if (currentPrescriptions != selectedPerson.prescribedMedicines) {
+            showDiscardConfirmationDialog()
+        } else {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
+    }
+
+    private fun showDiscardConfirmationDialog() {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("Želite zapustiti brez shranjevanja?")
+            .setMessage("Spremembe ne bodo shranjene.")
+            .setPositiveButton("Da") { _, _ ->
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+            .setNegativeButton("Ne", null)
+            .show()
+    }
+
+    private fun updateEmptyAssignedState() {
+        textNoAssignedMedicines.visibility = if (assignedItems.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun finishWithResult() {
+        val prescriptions = assignedItems.map { Prescription(it.medicine.id, it.dose, it.notes) }
+        val updatedPerson = selectedPerson.copy(
+            prescribedMedicines = prescriptions
+        )
+        setResult(
+            Activity.RESULT_OK,
+            Intent().putExtra(EXTRA_UPDATED_PERSON, updatedPerson)
+        )
         finish()
+    }
+
+    private fun readInputData(): Boolean {
+        val personFromIntent = intent.getSerializableExtra(EXTRA_PERSON) as? Person
+        if (personFromIntent == null) {
+            return false
+        }
+
+        val medicinesFromIntent = intent.getSerializableExtra(EXTRA_ALL_MEDICINES) as? ArrayList<*>
+        val parsedMedicines = medicinesFromIntent
+            ?.filterIsInstance<Medicine>()
+            ?.sortedBy { it.name }
+            ?: emptyList()
+
+        selectedPerson = personFromIntent
+        allMedicines.clear()
+        allMedicines.addAll(parsedMedicines)
+        return true
     }
 }

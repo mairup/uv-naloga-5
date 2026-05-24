@@ -207,12 +207,12 @@ class PersonActivity : AppCompatActivity() {
             if (!isWeightValid) layoutWeight.error = "Neveljaven format teže"
             if (!isHeightValid) layoutHeight.error = "Neveljaven format višine"
 
-            Snackbar.make(findViewById(android.R.id.content), "Napačen format vnesenih podatkov", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(findViewById(android.R.id.content), "Preverite pravilnost vnesenih podatkov", Snackbar.LENGTH_SHORT).show()
             return
         }
 
         val id = currentPersonId ?: UUID.randomUUID().toString()
-        val existingPrescribedMeds = (intent.getSerializableExtra(EXTRA_PERSON) as? Person)?.prescribedMedicines ?: emptyList()
+        val existingPrescribedMeds = (intent.getSerializableExtra(EXTRA_PERSON) as? Person)?.prescribedMedicines ?: emptyList<Prescription>()
 
         val person = Person(
             id = id,

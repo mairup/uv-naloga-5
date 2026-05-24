@@ -48,7 +48,7 @@
                     android:layout_marginTop="2dp"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant"
-                    tools:text="Spol: M | Rojstvo: 1990-01-01" />
+                    tools:text="Spol: M | Datum rojstva: 1990-01-01" />
 
                 <TextView
                     android:id="@+id/textStats"
@@ -64,8 +64,8 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDelete"
                 style="@style/Widget.Material3.Button.IconButton.Filled"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="12dp"
                 android:contentDescription="Izbriši"
                 android:padding="0dp"
@@ -75,54 +75,80 @@
                 android:insetBottom="0dp"
                 app:icon="@drawable/ic_delete"
                 app:iconPadding="0dp"
-                app:iconSize="20dp"
+                app:iconSize="24dp"
                 app:iconGravity="textStart"
                 app:backgroundTint="@color/delete_btn_bg"
                 app:iconTint="@color/delete_btn_icon"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="14dp" />
 
         </LinearLayout>
 
         <!-- Expanded Area (hidden by default) -->
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/expandedActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
 
-            <TextView
-                android:id="@+id/textBmi"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                tools:text="ITM: 22.5" />
+                android:orientation="vertical"
+                android:paddingEnd="60dp">
 
-            <!-- Prescribed Meds Section -->
-            <TextView
-                android:id="@+id/textPrescribedMedsTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:text="Predpisana zdravila:"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textBmi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="ITM: 22.5" />
 
-            <TextView
-                android:id="@+id/textPrescribedMeds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                tools:text="• Amoksiklav&#10;• Mirzaten" />
+                <TextView
+                    android:id="@+id/textPrescribedMedsSectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Predpisana zdravila"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/textPrescribedMeds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="• Amoksiklav&#10;• Mirzaten" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnManagePersonMedicines"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom|end"
+                android:contentDescription="Uredi predpisana zdravila"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:backgroundTint="@color/nav_add_btn_bg"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_medicine"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:iconTint="@color/nav_add_btn_icon" />
+
+        </FrameLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
