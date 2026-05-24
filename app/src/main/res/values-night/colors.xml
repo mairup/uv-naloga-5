@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Gender Toggle Colors (Dark Mode Override) -->
+    <color name="gender_checked_bg">#8c3620</color> <!-- Rich/dark terracotta -->
+    <color name="gender_unchecked_bg">#00000000</color>
+    <color name="gender_checked_text">#ffffff</color>
+    <color name="gender_unchecked_text">#e1e8e1</color>
+    <color name="gender_border">#2d4435</color>
+    <color name="gender_track_bg">#1c1c1c</color>
+
+    <!-- Calculate Button Colors (Dark Mode Override) -->
+    <color name="calculate_btn_bg">#f39279</color> <!-- Brighter terracotta peach -->
+    <color name="calculate_btn_text">#2b1008</color>
+
+    <!-- Terracotta Delete Button -->
+    <color name="delete_btn_bg">#d46448</color>
+    <color name="delete_btn_icon">#ffffff</color>
+</resources>

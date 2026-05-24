@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Light Earthy Palette -->
+    <color name="sage_primary">#558b6e</color>
+    <color name="sage_bg">#e0e4e0</color>
+    <color name="sage_container">#ccdcd2</color>
+    <color name="sage_text_dark">#2b3d2b</color>
+
+    <color name="terracotta_secondary">#e48e73</color>
+    <color name="terracotta_container">#fbeae3</color>
+    <color name="delete_btn_bg">#c14c2b</color>
+    <color name="delete_btn_icon">#ffffff</color>
+
+    <color name="beige_surface">#e2efe7</color>
+    <color name="sage_border">#8cb89a</color>
+
+    <!-- Gender Toggle Colors (Light) -->
+    <color name="gender_checked_bg">#c14c2b</color> <!-- Strong terracotta -->
+    <color name="gender_unchecked_bg">#00000000</color>
+    <color name="gender_checked_text">#ffffff</color>
+    <color name="gender_unchecked_text">#2b3d2b</color>
+    <color name="gender_border">#bad5c5</color>
+    <color name="gender_track_bg">#e8e8e8</color>
+
+    <!-- Calculate Button Colors (Light) -->
+    <color name="calculate_btn_bg">#f08367</color> <!-- Strong terracotta peach -->
+    <color name="calculate_btn_text">#ffffff</color>
+
+    <!-- Dark Earthy Palette -->
+    <color name="dark_sage_primary">#8ab68d</color>
+    <color name="dark_sage_bg">#121212</color>
+    <color name="dark_sage_container">#1c2e22</color>
+    <color name="dark_sage_text_light">#e1e8e1</color>
+
+    <color name="dark_terracotta_secondary">#f0a58e</color>
+    <color name="dark_terracotta_container">#3d2621</color>
+
+    <color name="dark_surface">#1c2e22</color>
+    <color name="dark_border">#2d4435</color>
+</resources>

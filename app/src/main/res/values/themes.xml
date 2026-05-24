@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Naloga5" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Light Mode Defaults -->
+        <item name="colorPrimary">@color/sage_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/sage_container</item>
+        <item name="colorOnPrimaryContainer">@color/sage_text_dark</item>
+
+        <item name="colorSecondary">@color/terracotta_secondary</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/terracotta_container</item>
+        <item name="colorOnSecondaryContainer">#331108</item>
+
+        <item name="android:colorBackground">@color/sage_bg</item>
+        <item name="colorOnBackground">@color/sage_text_dark</item>
+
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/sage_text_dark</item>
+        <item name="colorSurfaceVariant">@color/beige_surface</item>
+        <item name="colorOnSurfaceVariant">@color/sage_text_dark</item>
+        <item name="colorSurfaceContainer">@color/sage_bg</item>
+
+        <item name="colorOutline">@color/sage_border</item>
+
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.Naloga5" parent="Base.Theme.Naloga5"/>
+</resources>

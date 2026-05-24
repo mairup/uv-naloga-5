@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Naloga5" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Dark Mode Attributes -->
+        <item name="colorPrimary">@color/dark_sage_primary</item>
+        <item name="colorOnPrimary">@color/dark_sage_bg</item>
+        <item name="colorPrimaryContainer">#203527</item>
+        <item name="colorOnPrimaryContainer">@color/dark_sage_text_light</item>
+
+        <item name="colorSecondary">@color/dark_terracotta_secondary</item>
+        <item name="colorOnSecondary">@color/dark_sage_bg</item>
+        <item name="colorSecondaryContainer">@color/dark_terracotta_container</item>
+        <item name="colorOnSecondaryContainer">@color/dark_sage_text_light</item>
+
+        <item name="android:colorBackground">@color/dark_sage_bg</item>
+        <item name="colorOnBackground">@color/dark_sage_text_light</item>
+
+        <item name="colorSurface">#141815</item>
+        <item name="colorOnSurface">@color/dark_sage_text_light</item>
+        <item name="colorSurfaceVariant">#1e2520</item>
+        <item name="colorOnSurfaceVariant">@color/dark_sage_text_light</item>
+        <item name="colorSurfaceContainer">#141815</item>
+
+        <item name="colorOutline">@color/dark_border</item>
+
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    tools:context=".MainActivity">
+
+    <!-- Top Screen Title -->
+    <TextView
+        android:id="@+id/textScreenTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="Seznam oseb"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="28sp"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- People Tab (Left) -->
+        <LinearLayout
+            android:id="@+id/tabPeople"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <!-- Pill highlight container for icon -->
+            <FrameLayout
+                android:id="@+id/pillPeople"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:background="@drawable/nav_item_pill_selected">
+
+                <ImageView
+                    android:id="@+id/iconPeople"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_people"
+                    app:tint="?attr/colorOnSecondaryContainer" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textPeople"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Osebe"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="?attr/colorOnBackground" />
+        </LinearLayout>
+
+        <!-- Create/Add Tab (Middle) -->
+        <LinearLayout
+            android:id="@+id/tabAdd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- FAB-like button (Pill shaped) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNavAdd"
+                android:layout_width="64dp"
+                android:layout_height="40dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="24dp"
+                app:backgroundTint="?attr/colorPrimaryContainer"
+                app:iconTint="?attr/colorOnPrimaryContainer" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Ustvari"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="?attr/colorOnBackground" />
+        </LinearLayout>
+
+        <!-- Medicines Tab (Right) -->
+        <LinearLayout
+            android:id="@+id/tabMedicines"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <!-- Pill highlight container for icon -->
+            <FrameLayout
+                android:id="@+id/pillMedicines"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:background="@android:color/transparent">
+
+                <ImageView
+                    android:id="@+id/iconMedicines"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_medicine"
+                    app:tint="?attr/colorOnBackground" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textMedicines"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Zdravila"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="?attr/colorOnBackground" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Middle Rounded Container -->
+    <FrameLayout
+        android:id="@+id/middleContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginHorizontal="0dp"
+        android:background="@drawable/rounded_middle_bg"
+        android:clipToOutline="true"
+        app:layout_constraintTop_toBottomOf="@id/textScreenTitle"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
+            tools:listitem="@layout/item_person" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
