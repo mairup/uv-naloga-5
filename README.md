@@ -11,4 +11,19 @@ Android app (Kotlin, API 34+) for managing patient data and calculating medicine
 
 ## Screenshots
 
-<!-- Add screenshots below -->
+### Light Mode
+
+| People List | Medicines List | Prescriptions |
+| :---: | :---: | :---: |
+| ![People List](screenshots/main_light.png) | ![Medicines List](screenshots/medicines_light.png) | ![Prescriptions](screenshots/prescriptions_light.png) |
+
+| Add Person | Add Medicine |
+| :---: | :---: |
+| ![Add Person](screenshots/person_add_light.png) | ![Add Medicine](screenshots/medicine_add_light.png) |
+
+### Dark Mode
+
+| People List | Medicines List | Prescriptions |
+| :---: | :---: | :---: |
+| ![People List](screenshots/main_dark.png) | ![Medicines List](screenshots/medicines_dark.png) | ![Prescriptions](screenshots/prescriptions_dark.png) |
+
