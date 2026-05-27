@@ -96,10 +96,11 @@ class MedicineActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { _, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             appBarLayout.setPadding(0, systemBars.top, 0, 0)
 
             val density = resources.displayMetrics.density
-            val bottomPaddingPx = systemBars.bottom + (24 * density).toInt()
+            val bottomPaddingPx = Math.max(systemBars.bottom, ime.bottom) + (24 * density).toInt()
             contentLayout.setPadding(
                 contentLayout.paddingLeft,
                 contentLayout.paddingTop,
@@ -257,5 +258,21 @@ class MedicineActivity : AppCompatActivity() {
         }
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
+    }
+
+    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
+        if (ev.action == android.view.MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = android.graphics.Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

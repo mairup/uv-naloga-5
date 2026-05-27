@@ -200,10 +200,12 @@ class DosageActivity : AppCompatActivity() {
                     showSnackbar("Zdravilo je že dodano")
                     return@PrescribedMedicineAdapter
                 }
-                assignedItems.add(PrescribedMedicineItem(item.medicine))
+                val newItem = PrescribedMedicineItem(item.medicine)
+                assignedItems.add(newItem)
                 assignedAdapter.notifyItemInserted(assignedItems.size - 1)
                 updateEmptyAssignedState()
                 hidePicker()
+                showCalculator(newItem)
             }
         )
 
@@ -263,8 +265,7 @@ class DosageActivity : AppCompatActivity() {
             }
 
             // Close keyboard
-            val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-            imm.hideSoftInputFromWindow(editCalcMgKg.windowToken, 0)
+            hideKeyboard()
         }
 
         btnSaveCalc.setOnClickListener {
@@ -323,6 +324,10 @@ class DosageActivity : AppCompatActivity() {
     private fun hidePicker() {
         if (pickerOverlay.visibility != View.VISIBLE) return
 
+        hideKeyboard()
+        editSearchMedicine.text?.clear()
+        editSearchMedicine.clearFocus()
+
         val density = resources.displayMetrics.density
         val endOffsetY = 24f * density
 
@@ -342,6 +347,7 @@ class DosageActivity : AppCompatActivity() {
     }
 
     private fun showCalculator(item: PrescribedMedicineItem) {
+        val isDifferentMedicine = currentCalcItem?.medicine?.id != item.medicine.id
         currentCalcItem = item
         val med = item.medicine
 
@@ -373,7 +379,7 @@ class DosageActivity : AppCompatActivity() {
             }.toString()
 
             textCalcRange.text = rangeText
-            editCalcMgKg.setText("")
+            if (isDifferentMedicine) editCalcMgKg.setText("")
         } else {
             layoutRelativeCalc.visibility = View.GONE
         }
@@ -409,6 +415,11 @@ class DosageActivity : AppCompatActivity() {
         if (calculatorOverlay.visibility != View.VISIBLE) return
         currentCalcItem = null
 
+        hideKeyboard()
+        editCalcMgKg.clearFocus()
+        editCalcFinalDose.clearFocus()
+        editCalcNotes.clearFocus()
+
         val density = resources.displayMetrics.density
         val endOffsetY = 24f * density
 
@@ -425,6 +436,12 @@ class DosageActivity : AppCompatActivity() {
                 calculatorOverlay.visibility = View.GONE
             }
             .start()
+    }
+
+    private fun hideKeyboard() {
+        val view = currentFocus ?: window.decorView
+        val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun removeAssignedItem(item: PrescribedMedicineItem) {
@@ -496,5 +513,20 @@ class DosageActivity : AppCompatActivity() {
         Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
             .setAnchorView(R.id.bottomActionBar)
             .show()
+    }
+
+    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
+        if (ev.action == android.view.MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is android.widget.EditText) {
+                val outRect = android.graphics.Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                    v.clearFocus()
+                    hideKeyboard()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }
