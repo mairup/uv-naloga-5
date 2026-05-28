@@ -1,4 +1,4 @@
-# Naloga 5 — Medical Checkup Assistant
+# E-Receptnik — Medical Checkup Assistant
 
 Android app for managing patient data and calculating medicine dosages.
 

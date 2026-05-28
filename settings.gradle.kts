@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Naloga 5"
+rootProject.name = "E-Receptnik"
 include(":app")
  

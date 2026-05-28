@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Naloga 5</string>
+    <string name="app_name">E-Receptnik</string>
     <string name="dosage_title">Izračun odmerka</string>
     <string name="dosage_weight">Teža (kg)</string>
     <string name="dosage_min_dose">Min. odmerek (mg/kg)</string>
