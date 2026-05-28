@@ -15,15 +15,16 @@ Android app (Kotlin, API 34+) for managing patient data and calculating medicine
 
 | People List | Medicines List | Prescriptions |
 | :---: | :---: | :---: |
-| ![People List](screenshots/main_light.png) | ![Medicines List](screenshots/medicines_light.png) | ![Prescriptions](screenshots/prescriptions_light.png) |
+| <img src="screenshots/main_light.png" width="300"> | <img src="screenshots/medicines_light.png" width="300"> | <img src="screenshots/prescriptions_light.png" width="300"> |
 
 | Add Person | Add Medicine |
 | :---: | :---: |
-| ![Add Person](screenshots/person_add_light.png) | ![Add Medicine](screenshots/medicine_add_light.png) |
+| <img src="screenshots/person_add_light.png" width="300"> | <img src="screenshots/medicine_add_light.png" width="300"> |
 
 ### Dark Mode
 
 | People List | Medicines List | Prescriptions |
 | :---: | :---: | :---: |
-| ![People List](screenshots/main_dark.png) | ![Medicines List](screenshots/medicines_dark.png) | ![Prescriptions](screenshots/prescriptions_dark.png) |
+| <img src="screenshots/main_dark.png" width="300"> | <img src="screenshots/medicines_dark.png" width="300"> | <img src="screenshots/prescriptions_dark.png" width="300"> |
+
 
