@@ -1,6 +1,6 @@
 # Naloga 5 — Medical Checkup Assistant
 
-Android app (Kotlin, API 34+) for managing patient data and calculating medicine dosages.
+Android app for managing patient data and calculating medicine dosages.
 
 ## Features
 
